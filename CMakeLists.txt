@@ -84,7 +84,7 @@ SUCCESS("Linked library: GLM")
 
 # OpenGL
 find_package(OpenGL REQUIRED)
-link_libraries(${OPENGL_LIBRARIES})
+target_link_libraries(${CMAKE_PROJECT_NAME} ${OPENGL_LIBRARIES})
 include_directories(${OPENGL_INCLUDE_DIRS})
 SUCCESS("Linked library: OpenGL")
 
