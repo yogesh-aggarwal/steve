@@ -61,11 +61,11 @@ LoadShaderProgram()
       glCompileShader(fragmentShader);
 
       int success_fs;
-      glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success_fs);
+      glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success_fs);
       if (!success_fs)
       {
          char infoLog[512];
-         glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+         glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
          std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n"
                    << infoLog << std::endl;
       }
@@ -73,28 +73,26 @@ LoadShaderProgram()
       shaderProgram = glCreateProgram();
       glAttachShader(shaderProgram, vertexShader);
       glAttachShader(shaderProgram, fragmentShader);
-      glLinkProgram(shaderProgram);
    }
+
+   glLinkProgram(shaderProgram);
 
    return shaderProgram;
 }
 
 void
-Render(uint32_t shaderProgram)
+Setup()
 {
-   // Render commands here
-   int glError = glGetError();
-   if (glError) std::cout << glError << std::endl;
-
-   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-   glClear(GL_COLOR_BUFFER_BIT);
-
    // clang-format off
    float vertices[] = {
-       -0.5f, -0.5f,
+        0.5f,  0.5f,
         0.5f, -0.5f,
-        0.0f,  0.5f,
+       -0.5f, -0.5f,
        -0.5f,  0.5f,
+   };
+   uint32_t indices[] = {
+      0, 1, 2,
+      2, 3, 0,
    };
    // clang-format on
 
@@ -107,6 +105,14 @@ Render(uint32_t shaderProgram)
    glBindBuffer(GL_ARRAY_BUFFER, vbo);
    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+   uint32_t ebo;
+   glGenBuffers(1, &ebo);
+   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+   glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                sizeof(indices),
+                indices,
+                GL_STATIC_DRAW);
+
    glVertexAttribPointer(0,
                          2,
                          GL_FLOAT,
@@ -114,11 +120,20 @@ Render(uint32_t shaderProgram)
                          2 * sizeof(float),
                          (void *)0);
    glEnableVertexAttribArray(0);
+}
+
+void
+Render(uint32_t shaderProgram)
+{
+   // Render commands here
+   int glError = glGetError();
+   if (glError) std::cout << glError << std::endl;
+
+   glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+   glClear(GL_COLOR_BUFFER_BIT);
 
    glUseProgram(shaderProgram);
-
-   glDrawArrays(GL_TRIANGLES, 0, 3);
-   return;
+   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 }
 
 int
@@ -159,6 +174,8 @@ main()
       return 1;
    }
 
+   Setup();
+
    while (!glfwWindowShouldClose(window))
    {
       ProcessInput(window);
@@ -174,6 +191,4 @@ terminate:
    glfwTerminate();
 
    return EXIT_SUCCESS;
-
-   return 0;
 }
