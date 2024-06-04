@@ -75,17 +75,22 @@ message("[(---- Linking Libraries ----)]")
 add_subdirectory("Vendor/glfw")
 include_directories("Vendor/glfw/include")
 target_link_libraries(${CMAKE_PROJECT_NAME} glfw)
-SUCCESS("Linked library: glfw")
+SUCCESS("Linked library: GLFW3")
 
 # GLM
 include_directories("Vendor/glm")
 SUCCESS("Linked library: GLM")
 
-# OpenGL
-find_package(OpenGL REQUIRED)
-target_link_libraries(${CMAKE_PROJECT_NAME} ${OPENGL_LIBRARIES})
-include_directories(${OPENGL_INCLUDE_DIRS})
-SUCCESS("Linked library: OpenGL")
+# GLAD
+add_subdirectory("Vendor/glad")
+target_link_libraries(${CMAKE_PROJECT_NAME} glad)
+SUCCESS("Linked library: GLAD")
+
+# # OpenGL
+# find_package(OpenGL REQUIRED)
+# target_link_libraries(${CMAKE_PROJECT_NAME} ${OPENGL_LIBRARIES})
+# message("PE" ${OPENGL_LIBRARIES})
+# SUCCESS("Linked library: OpenGL")
 
 message("[(---- Done Linking Libraries ----)]\n")
 
