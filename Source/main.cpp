@@ -85,10 +85,11 @@ Setup()
 {
    // clang-format off
    float vertices[] = {
-        0.5f,  0.5f,
-        0.5f, -0.5f,
-       -0.5f, -0.5f,
-       -0.5f,  0.5f,
+   // Vertices              // Color
+      -0.5f,  0.5f,  0.0f,     1.0f, 0.0f, 0.0f, 1.0f,
+       0.5f, -0.5f,  0.0f,     0.0f, 1.0f, 0.0f, 1.0f,
+       0.5f,  0.5f,  0.0f,     0.0f, 0.0f, 1.0f, 1.0f,
+      -0.5f, -0.5f,  0.0f,     1.0f, 1.0f, 0.0f, 1.0f,
    };
    uint32_t indices[] = {
       0, 1, 2,
@@ -117,9 +118,17 @@ Setup()
                          2,
                          GL_FLOAT,
                          GL_FALSE,
-                         2 * sizeof(float),
+                         6 * sizeof(float),
                          (void *)0);
    glEnableVertexAttribArray(0);
+
+   glVertexAttribPointer(1,
+                         4,
+                         GL_FLOAT,
+                         GL_FALSE,
+                         6 * sizeof(float),
+                         (void *)(2 * sizeof(float)));
+   glEnableVertexAttribArray(1);
 }
 
 void
@@ -171,7 +180,7 @@ main()
    if (glError)
    {
       std::cout << glError << std::endl;
-      return 1;
+      goto terminate;
    }
 
    Setup();
