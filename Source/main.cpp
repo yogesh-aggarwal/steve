@@ -5,23 +5,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-std::string
-ReadFileContent(const std::string &path)
-{
-   std::ifstream file(path);
-   if (!file.is_open())
-   {
-      std::cerr << "Failed to open file: " << path << std::endl;
-      return "";
-   }
-
-   std::string content;
-   std::string line;
-   while (std::getline(file, line))
-      content += line + "\n";
-
-   return content;
-}
+#include <Steve/Shader.hpp>
 
 void
 ProcessInput(GLFWwindow *window)
@@ -33,48 +17,25 @@ ProcessInput(GLFWwindow *window)
 uint32_t
 LoadShaderProgram()
 {
-   uint32_t shaderProgram;
-   {
-      auto vsSourceString     = ReadFileContent("../Shaders/vertex.vs");
-      auto vertexShaderSource = vsSourceString.c_str();
+   Result<bool> res { false };
 
-      uint32_t vertexShader;
-      vertexShader = glCreateShader(GL_VERTEX_SHADER);
-      glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
-      glCompileShader(vertexShader);
+   // Vertex shader
+   auto vertexShader =
+       Shader::FromFile(Shader::Type::Vertex, "../Shaders/vertex.vs");
+   if (!vertexShader) return -1;
+   res = vertexShader.value.Allocate();
+   if (!res) return -1;
 
-      int success_vs;
-      glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success_vs);
-      if (!success_vs)
-      {
-         char infoLog[512];
-         glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-         std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n"
-                   << infoLog << std::endl;
-      }
+   // Fragment shader
+   auto fragmentShader =
+       Shader::FromFile(Shader::Type::Fragment, "../Shaders/fragment.vs");
+   if (!fragmentShader) return -1;
+   res = fragmentShader.value.Allocate();
+   if (!res) return -1;
 
-      auto     fsSourceString       = ReadFileContent("../Shaders/fragment.fs");
-      auto     fragmentShaderSource = fsSourceString.c_str();
-      uint32_t fragmentShader;
-      fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-      glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
-      glCompileShader(fragmentShader);
-
-      int success_fs;
-      glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success_fs);
-      if (!success_fs)
-      {
-         char infoLog[512];
-         glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-         std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n"
-                   << infoLog << std::endl;
-      }
-
-      shaderProgram = glCreateProgram();
-      glAttachShader(shaderProgram, vertexShader);
-      glAttachShader(shaderProgram, fragmentShader);
-   }
-
+   uint32_t shaderProgram = glCreateProgram();
+   glAttachShader(shaderProgram, vertexShader.value.GetID());
+   glAttachShader(shaderProgram, vertexShader.value.GetID());
    glLinkProgram(shaderProgram);
 
    return shaderProgram;
