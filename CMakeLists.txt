@@ -73,12 +73,11 @@ message("[(---- Linking Libraries ----)]")
 
 # GLFW3
 add_subdirectory("Vendor/glfw")
-target_link_libraries(${CMAKE_PROJECT_NAME} glfw)
 include_directories("Vendor/glfw/include")
+target_link_libraries(${CMAKE_PROJECT_NAME} glfw)
 SUCCESS("Linked library: glfw")
 
 # GLM
-add_subdirectory("Vendor/glm")
 include_directories("Vendor/glm")
 SUCCESS("Linked library: GLM")
 
