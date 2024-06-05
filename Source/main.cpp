@@ -16,33 +16,18 @@
 
 namespace Application
 {
-   VertexBuffer vbo {};
-
    void
    OnInit()
    {
-      auto _ = Result<bool> { false };
-
-      VertexArray vao {};
-      _ = vao.AllocateAndBind();
-
-      _ = vbo.BindAndAllocate();
-
-      IndexBuffer ibo {};
-      _ = ibo.BindAndPopulate();
-
-      VertexBufferLayout positionLayout(0, 3, 0);
-      VertexBufferLayout colorLayout(1, 4, 3);
-      _ = positionLayout.Apply();
-      _ = colorLayout.Apply();
-
-      ShaderProgram shaderProgram =
-          ShaderProgram::FromFiles(
-              "/home/yogesh/Downloads/learn-opengl/Shaders/vertex.vs",
-              "/home/yogesh/Downloads/learn-opengl/Shaders/fragment.fs")
-              .value;
-      _ = shaderProgram.Allocate();
-      glUseProgram(shaderProgram.GetID());
+      auto _ = Renderer::Initialize().WithErrorHandler([](Ref<Error> error) {
+         error->Push({ STEVE_APPLICATION_INITIALIZATION_FAILED,
+                       "Failed to initialize application." });
+      });
+      if (!_)
+      {
+         _.error->Print();
+         return;
+      }
    }
 
    void
@@ -55,28 +40,48 @@ namespace Application
       glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT);
 
+      auto _ = Result<bool> { false };
+
       // Begin scene
+      _ = Renderer::BeginScene().WithErrorHandler([](Ref<Error> error) {
+         error->Push({ STEVE_APPLICATION_RENDER_FAILED,
+                       "Failed to being rendering scene." });
+      });
+      if (!_)
       {
+         _.error->Print();
+         return;
       }
 
       // Draw a quad
-      std::vector<Vertex> vertices = {};
       {
-         std::array<Vertex, 4> q1 =
-             Steve::Draw::DrawQuad(0.0f, 0.0f, 1.0f, 1.0f, glm::vec4(0.0f));
-         for (auto &v : q1)
+         std::vector<Vertex> vertices = {};
          {
-            vertices.push_back(v);
-            v.Print();
+            std::array<Vertex, 4> q1 =
+                Steve::Draw::DrawQuad(0.0f, 0.0f, 1.0f, 1.0f, glm::vec4(0.0f));
+            for (auto &v : q1)
+            {
+               vertices.push_back(v);
+            }
+         }
+
+         _ = Renderer::DrawVertices(vertices).WithErrorHandler(
+             [](Ref<Error> error) {
+                error->Push({ STEVE_APPLICATION_RENDER_FAILED,
+                              "Failed to draw vertices." });
+             });
+         if (!_)
+         {
+            _.error->Print();
+            return;
          }
       }
 
       // End scene
-      {
-         auto _ = vbo.BindAndUploadData(vertices);
-         if (!_) { _.error->Print("Vertex buffer"); }
-         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-      }
+      _ = Renderer::EndScene().WithErrorHandler([](Ref<Error> error) {
+         error->Push({ STEVE_APPLICATION_RENDER_FAILED,
+                       "Failed to end rendering scene." });
+      });
    }
 
    void

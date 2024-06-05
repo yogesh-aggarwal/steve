@@ -10,27 +10,22 @@
 #include <Steve/Objects/IndexBuffer.hpp>
 #include <Steve/Shader/ShaderProgram.hpp>
 
-class Renderer
+namespace Renderer
 {
-public:
-   bool                m_HasInitialized;
-   bool                m_HasBegunScene;
-   std::vector<Vertex> m_Vertices;
+   struct State
+   {
+      bool                hasInitialized;
+      bool                hasBegunScene;
+      std::vector<Vertex> vertices;
 
-   VertexArray   m_VertexArray;
-   VertexBuffer  m_VertexBuffer;
-   IndexBuffer   m_IndexBuffer;
-   ShaderProgram m_ShaderProgram;
-
-public:
-   Renderer(ShaderProgram shaderProgram);
-   ~Renderer();
+      VertexArray   vertexArray;
+      VertexBuffer  vertexBuffer;
+      IndexBuffer   indexBuffer;
+      ShaderProgram shaderProgram;
+   };
 
    inline bool
-   HasInitialized() const
-   {
-      return m_HasInitialized;
-   }
+   HasInitialized();
 
    Result<bool>
    Initialize();

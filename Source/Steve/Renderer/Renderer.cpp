@@ -1,16 +1,13 @@
 #include "Renderer.hpp"
 
-Renderer::Renderer(ShaderProgram shaderProgram)
-    : m_Vertices(MAX_VERTICES), m_HasBegunScene(false), m_VertexArray(),
-      m_VertexBuffer(), m_IndexBuffer(), m_ShaderProgram(shaderProgram)
-{
-}
+#include <Steve/Core/Helpers.hpp>
 
-Renderer::~Renderer()
-{
-   if (!m_HasBegunScene) return;
+Ref<Renderer::State> state = nullptr;
 
-   auto _ = EndScene();
+bool
+Renderer::HasInitialized()
+{
+   return false;
 }
 
 Result<bool>
@@ -18,24 +15,68 @@ Renderer::Initialize()
 {
    auto _ = Result<bool> { false };
 
-   _ = m_ShaderProgram.Allocate();
-   if (!_) return _;
-   _ = m_VertexArray.AllocateAndBind();
-   if (!_) return _;
-   _ = m_VertexBuffer.BindAndAllocate();
-   if (!_) return _;
-   _ = m_IndexBuffer.BindAndPopulate();
-   if (!_) return _;
+   ShaderProgram shaderProgram =
+       ShaderProgram::FromFiles(
+           "/home/yogesh/Downloads/learn-opengl/Shaders/vertex.vs",
+           "/home/yogesh/Downloads/learn-opengl/Shaders/fragment.fs")
+           .value;
+   _ = shaderProgram.Allocate();
+
+   VertexArray vao {};
+   _ = vao.AllocateAndBind();
+   if (!_)
+   {
+      return { false,
+               new Error({ STEVE_RENDERER_STATE_INITIALIZATION_FAILED,
+                           "Failed to intialize renderer state." }) };
+   }
+
+   VertexBuffer vbo {};
+   _ = vbo.BindAndAllocate();
+   if (!_)
+   {
+      return { false,
+               new Error({ STEVE_RENDERER_STATE_INITIALIZATION_FAILED,
+                           "Failed to intialize renderer state." }) };
+   }
+
+   IndexBuffer ibo {};
+   _ = ibo.BindAndPopulate();
+   if (!_)
+   {
+      return { false,
+               new Error({ STEVE_RENDERER_STATE_INITIALIZATION_FAILED,
+                           "Failed to intialize renderer state." }) };
+   }
 
    VertexBufferLayout positionLayout(0, 3, 0);
    _ = positionLayout.Apply();
-   if (!_) return _;
+   if (!_)
+   {
+      return { false,
+               new Error({ STEVE_RENDERER_STATE_INITIALIZATION_FAILED,
+                           "Failed to intialize renderer state." }) };
+   }
 
    VertexBufferLayout colorLayout(1, 4, 3);
    _ = colorLayout.Apply();
-   if (!_) return _;
+   if (!_)
+   {
+      return { false,
+               new Error({ STEVE_RENDERER_STATE_INITIALIZATION_FAILED,
+                           "Failed to intialize renderer state." }) };
+   }
 
-   m_HasInitialized = true;
+   State m_State = {
+      .hasInitialized = true,
+      .hasBegunScene  = false,
+      .vertices       = std::vector<Vertex>(MAX_VERTICES),
+      .vertexArray    = vao,
+      .vertexBuffer   = vbo,
+      .indexBuffer    = ibo,
+      .shaderProgram  = shaderProgram,
+   };
+   state = CreateRef<State>(m_State);
 
    return true;
 }
@@ -43,21 +84,23 @@ Renderer::Initialize()
 Result<bool>
 Renderer::BeginScene()
 {
-   if (!m_HasInitialized)
+   if (!state->hasInitialized)
    {
       return { false,
                new Error({ STEVE_RENDERER_NOT_INITIALIZED,
                            "Renderer not initialized" }) };
    }
-   if (m_HasBegunScene)
+   if (state->hasBegunScene)
    {
       return { false,
                new Error({ STEVE_RENDERER_SCENE_ALREADY_BEGUN,
                            "Renderer scene already begun" }) };
    }
 
-   m_HasBegunScene = true;
-   m_Vertices.clear();
+   state->hasBegunScene = true;
+   state->vertices.clear();
+
+   state->shaderProgram.Use();
 
    return true;
 }
@@ -65,27 +108,24 @@ Renderer::BeginScene()
 Result<bool>
 Renderer::EndScene()
 {
-   if (!m_HasInitialized)
+   if (!state->hasInitialized)
    {
       return { false,
                new Error({ STEVE_RENDERER_NOT_INITIALIZED,
                            "Renderer not initialized" }) };
    }
-   if (!m_HasBegunScene)
+   if (!state->hasBegunScene)
    {
       return { false,
                new Error({ STEVE_RENDERER_SCENE_HAS_NOT_BEGUN,
                            "Renderer scene has not begun" }) };
    }
-   if (m_Vertices.empty()) { return true; }
-
-   for (auto &v : m_Vertices)
-      v.Print();
+   if (state->vertices.empty()) { return true; }
 
    auto _ = Result<bool> { false };
 
-   _ = m_VertexBuffer.BindAndUploadData(m_Vertices);
-   _ = m_ShaderProgram.Use();
+   _ = state->vertexBuffer.BindAndUploadData(state->vertices);
+   _ = state->shaderProgram.Use();
    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
    Flush();
@@ -96,11 +136,11 @@ Renderer::EndScene()
 void
 Renderer::Flush()
 {
-   m_HasBegunScene = false;
-   m_Vertices.clear();
+   state->hasBegunScene = false;
+   state->vertices.clear();
 
-   m_VertexArray.Flush();
-   m_VertexBuffer.Flush();
+   state->vertexArray.Flush();
+   state->vertexBuffer.Flush();
 }
 
 Result<bool>
@@ -112,7 +152,9 @@ Renderer::DrawVertices(const std::vector<Vertex> &vertices)
       return false;
    }
 
-   m_Vertices.insert(m_Vertices.end(), vertices.begin(), vertices.end());
+   state->vertices.insert(state->vertices.end(),
+                          vertices.begin(),
+                          vertices.end());
 
    return true;
 }
