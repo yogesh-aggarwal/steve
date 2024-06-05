@@ -42,7 +42,4 @@ public:
 
 private:
    Shader(std::string);
-
-   static Result<std::string>
-   ReadFile(const std::string &path);
 };
