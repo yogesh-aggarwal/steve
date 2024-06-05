@@ -10,6 +10,8 @@
 #include <tuple>
 #include <future>
 
+#include <Steve/Core/Defines.hpp>
+
 //-----------------------------------------------------------------------------
 
 #define ASSERT(x) _assert(condition, msg, __LINE__)
