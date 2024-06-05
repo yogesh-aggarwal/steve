@@ -13,9 +13,9 @@ private:
    Shader   m_VertexShader;
    Shader   m_FragmentShader;
 
-public:
-   ShaderProgram() = delete;
+   ShaderProgram();
 
+public:
    ShaderProgram(const Shader &vertexShader, const Shader &fragmentShader);
 
    uint32_t
@@ -23,4 +23,7 @@ public:
 
    Result<bool>
    Allocate();
+
+   static Result<ShaderProgram>
+   FromFiles(std::string vertexPath, std::string fragmentPath);
 };
