@@ -2,20 +2,18 @@
 
 #include <iostream>
 
+#include <glm/glm.hpp>
+
 struct Vertex
 {
-   alignas(4) float x;
-   alignas(4) float y;
-   alignas(4) float z;
-   alignas(4) float r;
-   alignas(4) float g;
-   alignas(4) float b;
-   alignas(4) float a;
+   glm::vec3 position;
+   glm::vec4 color;
 
    inline void
    Print() const
    {
-      std::cout << x << " " << y << " " << z << " " << r << " " << g << " " << b
-                << " " << a << std::endl;
+      std::cout << position.x << " " << position.y << " " << position.z << " "
+                << color.r << " " << color.g << " " << color.b << " " << color.a
+                << std::endl;
    }
 };

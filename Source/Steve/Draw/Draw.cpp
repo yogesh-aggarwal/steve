@@ -7,12 +7,19 @@ Steve::Draw::DrawQuad(float            x,
                       float            height,
                       const glm::vec4 &color)
 {
-   // clang-format off
-   Vertex v1 = {x,         y,          0.0f, color.r, color.g, color.b, color.a};
-   Vertex v2 = {x + width, y,          0.0f, color.r, color.g, color.b, color.a};
-   Vertex v3 = {x + width, y + height, 0.0f, color.r, color.g, color.b, color.a};
-   Vertex v4 = {x,         y + height, 0.0f, color.r, color.g, color.b, color.a};
-   // clang-format on
+   Vertex v1, v2, v3, v4;
+
+   v1.position = { x, y, 0.0f };
+   v1.color    = color;
+
+   v2.position = { x + width, y, 0.0f };
+   v2.color    = color;
+
+   v3.position = { x + width, y + height, 0.0f };
+   v3.color    = color;
+
+   v4.position = { x, y + height, 0.0f };
+   v4.color    = color;
 
    return { v1, v2, v3, v4 };
 }

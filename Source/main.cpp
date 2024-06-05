@@ -48,9 +48,12 @@ namespace Application
 
       // Draw a quad
       {
-         std::array<Vertex, 4> q1 =
+         std::array<Vertex, 4> q =
              Steve::Draw::DrawQuad(0.0f, 0.0f, 1.0f, 1.0f, glm::vec4(0.0f));
-         Renderer::DrawVertices({ q1.begin(), q1.end() });
+         Renderer::DrawVertices({ q.begin(), q.end() });
+
+         q = Steve::Draw::DrawQuad(0.01f, 0.01f, 0.98f, 0.98f, glm::vec4(1.0f));
+         Renderer::DrawVertices({ q.begin(), q.end() });
       }
 
       // End scene
