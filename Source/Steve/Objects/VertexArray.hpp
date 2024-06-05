@@ -6,6 +6,7 @@ class VertexArray
 {
 private:
    unsigned int m_ID;
+   bool         m_HasInitialized = false;
 
 public:
    VertexArray()  = default;
@@ -19,4 +20,13 @@ public:
 
    Result<bool>
    Unbind();
+
+   inline bool
+   HasInitialized() const
+   {
+      return m_HasInitialized;
+   }
+
+   void
+   Flush();
 };

@@ -26,3 +26,11 @@ VertexArray::Unbind()
 
    return true;
 }
+
+void
+VertexArray::Flush()
+{
+   m_HasInitialized = false;
+
+   glDeleteVertexArrays(1, &m_ID);
+}
