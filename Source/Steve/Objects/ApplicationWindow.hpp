@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <functional>
 
 #include <glad/glad.h>
@@ -23,11 +24,18 @@ private:
    bool        m_IsRunning;
    Callbacks   m_Callbacks;
 
+   std::string m_Title;
+   uint32_t    m_Width;
+   uint32_t    m_Height;
+
    std::function<void()> m_RenderCallback;
 
 public:
    ApplicationWindow() = default;
-   ApplicationWindow(Callbacks callbacks);
+   ApplicationWindow(std::string title,
+                     uint32_t    width,
+                     uint32_t    height,
+                     Callbacks   callbacks);
    ~ApplicationWindow() = default;
 
    Result<bool>

@@ -1,7 +1,13 @@
 #include "ApplicationWindow.hpp"
 
-ApplicationWindow::ApplicationWindow(Callbacks callbacks)
-    : m_Window(nullptr), m_IsRunning(false), m_Callbacks(callbacks)
+#include <iostream>
+
+ApplicationWindow::ApplicationWindow(std::string title,
+                                     uint32_t    width,
+                                     uint32_t    height,
+                                     Callbacks   callbacks)
+    : m_Window(nullptr), m_IsRunning(false), m_Title(std::move(title)),
+      m_Width(width), m_Height(height), m_Callbacks(callbacks)
 {
 }
 
@@ -16,7 +22,8 @@ ApplicationWindow::Initialize()
    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);   // MacOS only
 #endif
 
-   m_Window = glfwCreateWindow(800, 600, "Steve", nullptr, nullptr);
+   m_Window =
+       glfwCreateWindow(m_Width, m_Height, m_Title.c_str(), nullptr, nullptr);
    if (!m_Window)
    {
       Terminate();
@@ -61,6 +68,13 @@ ApplicationWindow::Run()
    while (!glfwWindowShouldClose(m_Window))
    {
       HandleInputs();
+
+      // Render commands here
+      int glError = glGetError();
+      if (glError) std::cout << glError << std::endl;
+
+      glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+      glClear(GL_COLOR_BUFFER_BIT);
 
       if (m_Callbacks.OnRender) m_Callbacks.OnRender();
 

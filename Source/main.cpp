@@ -33,13 +33,6 @@ namespace Application
    void
    OnRender()
    {
-      // Render commands here
-      int glError = glGetError();
-      if (glError) std::cout << glError << std::endl;
-
-      glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-      glClear(GL_COLOR_BUFFER_BIT);
-
       auto _ = Result<bool> { false };
 
       // Begin scene
@@ -78,4 +71,4 @@ namespace Application
    }
 }
 
-STEVE_MAIN(Application)
+STEVE_MAIN("Steve Woss", 800, 600, Application)

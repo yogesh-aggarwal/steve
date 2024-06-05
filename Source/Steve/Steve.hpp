@@ -1,6 +1,6 @@
 #pragma once
 
-#define STEVE_MAIN(APPLICATION_NAMESPACE)                         \
+#define STEVE_MAIN(TITLE, WIDTH, HEIGHT, APPLICATION_NAMESPACE)   \
    int main()                                                     \
    {                                                              \
       system("clear");                                            \
@@ -13,7 +13,7 @@
                                                                   \
       auto _ = Result<bool> { false };                            \
                                                                   \
-      ApplicationWindow window(callbacks);                        \
+      ApplicationWindow window(TITLE, WIDTH, HEIGHT, callbacks);  \
       _ = window.Initialize();                                    \
       _ = window.Run();                                           \
       window.Terminate();                                         \
