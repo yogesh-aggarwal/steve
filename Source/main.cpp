@@ -5,7 +5,14 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <Steve/Shader.hpp>
+#include <Steve/Shader/Shader.hpp>
+#include <Steve/Shader/ShaderProgram.hpp>
+#include <Steve/Objects/Vertex.hpp>
+#include <Steve/Objects/IndexBuffer.hpp>
+#include <Steve/Objects/VertexArray.hpp>
+#include <Steve/Objects/VertexBuffer.hpp>
+#include <Steve/Objects/VertexBufferLayout.hpp>
+#include <Steve/Draw/Draw.hpp>
 
 void
 ProcessInput(GLFWwindow *window)
@@ -22,74 +29,76 @@ LoadShaderProgram()
    // Vertex shader
    auto vertexShader =
        Shader::FromFile(Shader::Type::Vertex, "../Shaders/vertex.vs");
-   if (!vertexShader) return -1;
+   if (!vertexShader)
+   {
+      vertexShader.error->Print("Vertex shader");
+      return -1;
+   }
    res = vertexShader.value.Allocate();
-   if (!res) return -1;
+   if (!res)
+   {
+      vertexShader.error->Print("Vertex shader");
+      return -1;
+   }
 
    // Fragment shader
    auto fragmentShader =
-       Shader::FromFile(Shader::Type::Fragment, "../Shaders/fragment.vs");
-   if (!fragmentShader) return -1;
+       Shader::FromFile(Shader::Type::Fragment, "../Shaders/fragment.fs");
+   if (!fragmentShader)
+   {
+      fragmentShader.error->Print("Fragment shader");
+      return -1;
+   }
    res = fragmentShader.value.Allocate();
-   if (!res) return -1;
+   if (!res)
+   {
+      fragmentShader.error->Print("Fragment shader");
+      return -1;
+   }
 
-   uint32_t shaderProgram = glCreateProgram();
-   glAttachShader(shaderProgram, vertexShader.value.GetID());
-   glAttachShader(shaderProgram, vertexShader.value.GetID());
-   glLinkProgram(shaderProgram);
+   // Shader program
+   ShaderProgram shaderProgram(vertexShader.value, fragmentShader.value);
+   res = shaderProgram.Allocate();
+   if (!res)
+   {
+      res.error->Print("Shader program");
+      return -1;
+   }
 
-   return shaderProgram;
+   return shaderProgram.GetID();
 }
 
 void
 Setup()
 {
-   // clang-format off
-   float vertices[] = {
-   // Vertices              // Color
-      -0.5f,  0.5f,  0.0f,     1.0f, 0.0f, 0.0f, 1.0f,
-       0.5f, -0.5f,  0.0f,     0.0f, 1.0f, 0.0f, 1.0f,
-       0.5f,  0.5f,  0.0f,     0.0f, 0.0f, 1.0f, 1.0f,
-      -0.5f, -0.5f,  0.0f,     1.0f, 1.0f, 0.0f, 1.0f,
-   };
-   uint32_t indices[] = {
-      0, 1, 2,
-      2, 3, 0,
-   };
-   // clang-format on
+   // std::vector<Vertex> vertices {};
 
-   uint32_t vao;
-   glGenVertexArrays(1, &vao);
-   glBindVertexArray(vao);
+   std::vector<Vertex> vertices = {};
 
-   uint32_t vbo;
-   glGenBuffers(1, &vbo);
-   glBindBuffer(GL_ARRAY_BUFFER, vbo);
-   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+   std::array<Vertex, 4> q1 =
+       Steve::Draw::DrawQuad(0.0f, 0.0f, 1.0f, 1.0f, glm::vec4(0.0f));
+   for (auto &v : q1)
+   {
+      vertices.push_back(v);
+      v.Print();
+   }
 
-   uint32_t ebo;
-   glGenBuffers(1, &ebo);
-   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-   glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                sizeof(indices),
-                indices,
-                GL_STATIC_DRAW);
+   auto _ = Result<bool> { false };
 
-   glVertexAttribPointer(0,
-                         2,
-                         GL_FLOAT,
-                         GL_FALSE,
-                         6 * sizeof(float),
-                         (void *)0);
-   glEnableVertexAttribArray(0);
+   VertexArray vao {};
+   _ = vao.AllocateAndBind();
 
-   glVertexAttribPointer(1,
-                         4,
-                         GL_FLOAT,
-                         GL_FALSE,
-                         6 * sizeof(float),
-                         (void *)(2 * sizeof(float)));
-   glEnableVertexAttribArray(1);
+   VertexBuffer vbo {};
+   _ = vbo.BindAndAllocate();
+   _ = vbo.BindAndUploadData(vertices);
+
+   IndexBuffer ibo {};
+   _ = ibo.BindAndPopulate();
+
+   VertexBufferLayout positionLayout(0, 3, 0);
+   VertexBufferLayout colorLayout(1, 4, 3);
+   _ = positionLayout.Apply();
+   _ = colorLayout.Apply();
 }
 
 void
@@ -143,6 +152,8 @@ main()
       std::cout << glError << std::endl;
       goto terminate;
    }
+
+   // goto terminate;
 
    Setup();
 
