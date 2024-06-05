@@ -42,6 +42,13 @@ ShaderProgram::Allocate()
    return true;
 }
 
+Result<bool>
+ShaderProgram::Use()
+{
+   glUseProgram(m_ID);
+   return true;
+}
+
 Result<ShaderProgram>
 ShaderProgram::FromFiles(std::string vertexPath, std::string fragmentPath)
 {

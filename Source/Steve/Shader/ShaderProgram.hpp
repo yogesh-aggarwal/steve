@@ -24,6 +24,9 @@ public:
    Result<bool>
    Allocate();
 
+   Result<bool>
+   Use();
+
    static Result<ShaderProgram>
    FromFiles(std::string vertexPath, std::string fragmentPath);
 };
