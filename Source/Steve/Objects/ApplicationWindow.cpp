@@ -36,6 +36,8 @@ ApplicationWindow::Initialize()
    }
 
    if (m_Callbacks.OnInit) m_Callbacks.OnInit();
+
+   return true;
 }
 
 Result<bool>
@@ -67,6 +69,8 @@ ApplicationWindow::Run()
    }
 
    m_IsRunning = false;
+
+   return true;
 }
 
 void
@@ -81,6 +85,12 @@ ApplicationWindow::Terminate()
    if (m_Callbacks.OnTerminate) m_Callbacks.OnTerminate();
 
    glfwTerminate();
+
+   m_Window    = nullptr;
+   m_IsRunning = false;
+   m_Callbacks = {};
+
+   glfwSetWindowShouldClose(m_Window, true);
 }
 
 void
