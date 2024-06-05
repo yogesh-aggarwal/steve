@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 
+#include <Steve/Steve.hpp>
 #include <Steve/Shader/Shader.hpp>
 #include <Steve/Shader/ShaderProgram.hpp>
 #include <Steve/Objects/Vertex.hpp>
@@ -89,21 +90,4 @@ namespace Application
    }
 }
 
-int
-main()
-{
-   system("clear");
-
-   ApplicationWindow::Callbacks callbacks {};
-   callbacks.OnInit      = Application::OnInit;
-   callbacks.OnRender    = Application::OnRender;
-   callbacks.OnTerminate = Application::OnTerminate;
-   callbacks.OnKey       = Application::OnKey;
-
-   ApplicationWindow window(callbacks);
-   window.Initialize();
-   window.Run();
-   window.Terminate();
-
-   return EXIT_SUCCESS;
-}
+STEVE_MAIN(Application)
