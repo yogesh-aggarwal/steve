@@ -39,9 +39,7 @@ LoadShaderProgram()
    return shaderProgram;
 }
 
-VertexBuffer vbo {};
-
-void
+VertexBuffer
 Setup()
 {
    auto _ = Result<bool> { false };
@@ -49,6 +47,7 @@ Setup()
    VertexArray vao {};
    _ = vao.AllocateAndBind();
 
+   VertexBuffer vbo {};
    _ = vbo.BindAndAllocate();
 
    IndexBuffer ibo {};
@@ -58,10 +57,12 @@ Setup()
    VertexBufferLayout colorLayout(1, 4, 3);
    _ = positionLayout.Apply();
    _ = colorLayout.Apply();
+
+   return vbo;
 }
 
 void
-Render(ShaderProgram shaderProgram)
+Render(VertexBuffer vbo, ShaderProgram shaderProgram)
 {
    // Render commands here
    int glError = glGetError();
@@ -135,18 +136,18 @@ main()
    if (glError)
    {
       std::cout << glError << std::endl;
-      goto terminate;
+      return -1;
    }
 
    // goto terminate;
 
-   Setup();
+   auto vbo = Setup();
 
    while (!glfwWindowShouldClose(window))
    {
       ProcessInput(window);
 
-      Render(shaderProgram);
+      Render(vbo, shaderProgram);
 
       glfwSwapBuffers(window);
       glfwPollEvents();
