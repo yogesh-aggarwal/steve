@@ -79,3 +79,11 @@ VertexBuffer::Unbind()
 
    return true;
 }
+
+void
+VertexBuffer::Flush()
+{
+   m_HasInitialized = false;
+
+   glDeleteBuffers(1, &m_ID);
+}

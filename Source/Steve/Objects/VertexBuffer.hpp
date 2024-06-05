@@ -11,8 +11,8 @@
 class VertexBuffer
 {
 private:
-   bool                m_HasInitialized;
    uint32_t            m_ID;
+   bool                m_HasInitialized;
    std::vector<Vertex> m_Vertices {};
 
 public:
@@ -30,9 +30,18 @@ public:
    Result<bool>
    Unbind();
 
+   void
+   Flush();
+
    inline uint32_t
    GetID() const
    {
       return m_ID;
+   }
+
+   inline bool
+   HasInitialized() const
+   {
+      return m_HasInitialized;
    }
 };
