@@ -120,6 +120,10 @@ main()
 {
    system("clear");
 
+   std::cout << "--------------" << std::endl;
+   std::cout << "Starting Steve" << std::endl;
+   std::cout << "--------------" << std::endl;
+
    glfwInit();
    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
