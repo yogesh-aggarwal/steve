@@ -11,9 +11,11 @@
       callbacks.OnTerminate = APPLICATION_NAMESPACE::OnTerminate; \
       callbacks.OnKey       = APPLICATION_NAMESPACE::OnKey;       \
                                                                   \
+      auto _ = Result<bool> { false };                            \
+                                                                  \
       ApplicationWindow window(callbacks);                        \
-      window.Initialize();                                        \
-      window.Run();                                               \
+      _ = window.Initialize();                                    \
+      _ = window.Run();                                           \
       window.Terminate();                                         \
                                                                   \
       return EXIT_SUCCESS;                                        \

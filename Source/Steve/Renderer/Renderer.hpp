@@ -39,6 +39,6 @@ namespace Renderer
    void
    Flush();
 
-   Result<bool>
+   void
    DrawVertices(const std::vector<Vertex> &vertices);
 };

@@ -143,18 +143,17 @@ Renderer::Flush()
    state->vertexBuffer.Flush();
 }
 
-Result<bool>
+void
 Renderer::DrawVertices(const std::vector<Vertex> &vertices)
 {
-   if (vertices.size() > MAX_VERTICES)
+   auto newSize = state->vertices.size() + vertices.size();
+   if (newSize > MAX_VERTICES)
    {
       std::cerr << "Too many vertices" << std::endl;
-      return false;
+      return;
    }
 
    state->vertices.insert(state->vertices.end(),
                           vertices.begin(),
                           vertices.end());
-
-   return true;
 }

@@ -55,26 +55,9 @@ namespace Application
 
       // Draw a quad
       {
-         std::vector<Vertex> vertices = {};
-         {
-            std::array<Vertex, 4> q1 =
-                Steve::Draw::DrawQuad(0.0f, 0.0f, 1.0f, 1.0f, glm::vec4(0.0f));
-            for (auto &v : q1)
-            {
-               vertices.push_back(v);
-            }
-         }
-
-         _ = Renderer::DrawVertices(vertices).WithErrorHandler(
-             [](Ref<Error> error) {
-                error->Push({ STEVE_APPLICATION_RENDER_FAILED,
-                              "Failed to draw vertices." });
-             });
-         if (!_)
-         {
-            _.error->Print();
-            return;
-         }
+         std::array<Vertex, 4> q1 =
+             Steve::Draw::DrawQuad(0.0f, 0.0f, 1.0f, 1.0f, glm::vec4(0.0f));
+         Renderer::DrawVertices({ q1.begin(), q1.end() });
       }
 
       // End scene
