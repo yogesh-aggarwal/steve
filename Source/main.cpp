@@ -13,6 +13,7 @@
 #include <Steve/Objects/VertexBuffer.hpp>
 #include <Steve/Objects/VertexBufferLayout.hpp>
 #include <Steve/Draw/Draw.hpp>
+#include <Steve/Renderer/Renderer.hpp>
 
 void
 ProcessInput(GLFWwindow *window)
@@ -21,76 +22,34 @@ ProcessInput(GLFWwindow *window)
       glfwSetWindowShouldClose(window, true);
 }
 
-uint32_t
+ShaderProgram
 LoadShaderProgram()
 {
    Result<bool> res { false };
 
-   // Vertex shader
-   auto vertexShader =
-       Shader::FromFile(Shader::Type::Vertex, "../Shaders/vertex.vs");
-   if (!vertexShader)
-   {
-      vertexShader.error->Print("Vertex shader");
-      return -1;
-   }
-   res = vertexShader.value.Allocate();
-   if (!res)
-   {
-      vertexShader.error->Print("Vertex shader");
-      return -1;
-   }
+   ShaderProgram shaderProgram =
+       ShaderProgram::FromFiles(
+           "/home/yogesh/Downloads/learn-opengl/Shaders/vertex.vs",
+           "/home/yogesh/Downloads/learn-opengl/Shaders/fragment.fs")
+           .value;
 
-   // Fragment shader
-   auto fragmentShader =
-       Shader::FromFile(Shader::Type::Fragment, "../Shaders/fragment.fs");
-   if (!fragmentShader)
-   {
-      fragmentShader.error->Print("Fragment shader");
-      return -1;
-   }
-   res = fragmentShader.value.Allocate();
-   if (!res)
-   {
-      fragmentShader.error->Print("Fragment shader");
-      return -1;
-   }
-
-   // Shader program
-   ShaderProgram shaderProgram(vertexShader.value, fragmentShader.value);
    res = shaderProgram.Allocate();
-   if (!res)
-   {
-      res.error->Print("Shader program");
-      return -1;
-   }
+   if (!res) { res.error->Print("Shader program"); }
 
-   return shaderProgram.GetID();
+   return shaderProgram;
 }
+
+VertexBuffer vbo {};
 
 void
 Setup()
 {
-   // std::vector<Vertex> vertices {};
-
-   std::vector<Vertex> vertices = {};
-
-   std::array<Vertex, 4> q1 =
-       Steve::Draw::DrawQuad(0.0f, 0.0f, 1.0f, 1.0f, glm::vec4(0.0f));
-   for (auto &v : q1)
-   {
-      vertices.push_back(v);
-      v.Print();
-   }
-
    auto _ = Result<bool> { false };
 
    VertexArray vao {};
    _ = vao.AllocateAndBind();
 
-   VertexBuffer vbo {};
    _ = vbo.BindAndAllocate();
-   _ = vbo.BindAndUploadData(vertices);
 
    IndexBuffer ibo {};
    _ = ibo.BindAndPopulate();
@@ -102,7 +61,7 @@ Setup()
 }
 
 void
-Render(uint32_t shaderProgram)
+Render(ShaderProgram shaderProgram)
 {
    // Render commands here
    int glError = glGetError();
@@ -111,8 +70,30 @@ Render(uint32_t shaderProgram)
    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
    glClear(GL_COLOR_BUFFER_BIT);
 
-   glUseProgram(shaderProgram);
-   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+   // Begin scene
+   {
+   }
+
+   // Draw a quad
+   std::vector<Vertex> vertices = {};
+   {
+      std::array<Vertex, 4> q1 =
+          Steve::Draw::DrawQuad(0.0f, 0.0f, 1.0f, 1.0f, glm::vec4(0.0f));
+      for (auto &v : q1)
+      {
+         vertices.push_back(v);
+         v.Print();
+      }
+   }
+
+   // End scene
+   {
+      auto _ = vbo.BindAndUploadData(vertices);
+      if (!_) { _.error->Print("Vertex buffer"); }
+
+      glUseProgram(shaderProgram.GetID());
+      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+   }
 }
 
 int
