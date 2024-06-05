@@ -126,7 +126,7 @@ Renderer::EndScene()
 
    _ = state->vertexBuffer.BindAndUploadData(state->vertices);
    _ = state->shaderProgram.Use();
-   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+   glDrawElements(GL_TRIANGLES, MAX_INDICES, GL_UNSIGNED_INT, nullptr);
 
    Flush();
 
