@@ -16,9 +16,8 @@ Renderer::Initialize()
    auto _ = Result<bool> { false };
 
    ShaderProgram shaderProgram =
-       ShaderProgram::FromFiles(
-           "/home/yogesh/Downloads/learn-opengl/Shaders/vertex.vs",
-           "/home/yogesh/Downloads/learn-opengl/Shaders/fragment.fs")
+       ShaderProgram::FromFiles("../Shaders/vertex.vs",
+                                "../Shaders/fragment.fs")
            .value;
    _ = shaderProgram.Allocate();
 
