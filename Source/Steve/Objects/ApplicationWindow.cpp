@@ -33,6 +33,11 @@ ApplicationWindow::Initialize()
    }
 
    glfwMakeContextCurrent(m_Window);
+   glfwSetFramebufferSizeCallback(
+       m_Window,
+       [](GLFWwindow *window, int width, int height) {
+          glViewport(0, 0, width, height);
+       });
    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
    {
       Terminate();
