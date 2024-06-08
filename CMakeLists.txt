@@ -19,25 +19,25 @@ endfunction()
 # ---- Compile-Time Defines --------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------------------------------
 
-set(LEARNOPENGL_DEBUG_AS_APPLICATION ON)
-# set(LEARNOPENGL_DEBUG_AS_APPLICATION OFF)
+set(STEVE_DEBUG_AS_APPLICATION ON)
+# set(STEVE_DEBUG_AS_APPLICATION OFF)
 
-if(LEARNOPENGL_DEBUG_AS_APPLICATION)
-   add_compile_definitions(LEARNOPENGL_DEBUG_AS_APPLICATION)
+if(STEVE_DEBUG_AS_APPLICATION)
+   add_compile_definitions(STEVE_DEBUG_AS_APPLICATION)
 endif()
 
 add_compile_definitions(
    DEBUG
 
-   # LEARNOPENGL_DISABLE_LOGGING
-   # LEARNOPENGL_DISABLE_LOGGING_OUTPUT_TO_FILE
+   # STEVE_DISABLE_LOGGING
+   # STEVE_DISABLE_LOGGING_OUTPUT_TO_FILE
 )
 
 # ----------------------------------------------------------------------------------------------------------------------
 # ---- Project Setup ---------------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------------------------------
 
-project(LEARNOPENGL)
+project(STEVE)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_FLAGS "-pthread")
 set(NO_DEFAULT_PATH true)
@@ -47,11 +47,11 @@ set(CMAKE_MAKE_PROGRAM "make -j 16")
 # ---- Files -----------------------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------------------------------
 
-FILE(GLOB_RECURSE LEARNOPENGL_HEADER_FILES Source/*.hpp)
-FILE(GLOB_RECURSE LEARNOPENGL_SOURCE_FILES Source/*.cpp)
-FILE(GLOB_RECURSE LEARNOPENGL_TEMPLATE_FILES Source/*.tcc)
+FILE(GLOB_RECURSE STEVE_HEADER_FILES Source/*.hpp)
+FILE(GLOB_RECURSE STEVE_SOURCE_FILES Source/*.cpp)
+FILE(GLOB_RECURSE STEVE_TEMPLATE_FILES Source/*.tcc)
 
-set(LEARNOPENGL_ALL_FILES ${LEARNOPENGL_HEADER_FILES} ${LEARNOPENGL_SOURCE_FILES} ${LEARNOPENGL_TEMPLATE_FILES})
+set(STEVE_ALL_FILES ${STEVE_HEADER_FILES} ${STEVE_SOURCE_FILES} ${STEVE_TEMPLATE_FILES})
 
 # ----------------------------------------------------------------------------------------------------------------------
 # ---- Product ---------------------------------------------------------------------------------------------------------
@@ -59,10 +59,10 @@ set(LEARNOPENGL_ALL_FILES ${LEARNOPENGL_HEADER_FILES} ${LEARNOPENGL_SOURCE_FILES
 
 include_directories(Source)
 
-if(LEARNOPENGL_DEBUG_AS_APPLICATION)
-   add_executable(${PROJECT_NAME} ${LEARNOPENGL_ALL_FILES})
+if(STEVE_DEBUG_AS_APPLICATION)
+   add_executable(${PROJECT_NAME} ${STEVE_ALL_FILES})
 else()
-   add_library(${PROJECT_NAME} ${LEARNOPENGL_ALL_FILES})
+   add_library(${PROJECT_NAME} ${STEVE_ALL_FILES})
 endif()
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -98,14 +98,14 @@ message("[(---- Done Linking Libraries ----)]\n")
 # ---- PCHs ------------------------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------------------------------
 
-FILE(GLOB_RECURSE LEARNOPENGL_PCH_FILES Source/Core/*)
-target_precompile_headers(${PROJECT_NAME} PUBLIC ${LEARNOPENGL_PCH_FILES})
+FILE(GLOB_RECURSE STEVE_PCH_FILES Source/Core/*)
+target_precompile_headers(${PROJECT_NAME} PUBLIC ${STEVE_PCH_FILES})
 
 # ----------------------------------------------------------------------------------------------------------------------
 # ---- Installation ----------------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------------------------------
 set(CMAKE_INSTALL_PREFIX "/usr")
-install(DIRECTORY Source/LearnOpenGL
+install(DIRECTORY Source/Steve
    DESTINATION include
    FILES_MATCHING
    PATTERN "*.hpp"
