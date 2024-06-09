@@ -36,6 +36,9 @@ namespace Renderer
    Result<bool>
    EndScene();
 
+   std::vector<Vertex>
+   GetVertices();
+
    void
    Flush();
 

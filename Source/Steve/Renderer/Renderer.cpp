@@ -132,6 +132,12 @@ Renderer::EndScene()
    return true;
 }
 
+std::vector<Vertex>
+Renderer::GetVertices()
+{
+   return state->vertices;
+}
+
 void
 Renderer::Flush()
 {
