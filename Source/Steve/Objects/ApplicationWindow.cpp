@@ -32,6 +32,7 @@ ApplicationWindow::Initialize()
                            "Failed to create application window" }) };
    }
 
+   glfwSwapInterval(1);   // Enable vsync
    glfwMakeContextCurrent(m_Window);
    glfwSetFramebufferSizeCallback(
        m_Window,
