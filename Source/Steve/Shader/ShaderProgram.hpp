@@ -33,5 +33,9 @@ public:
    SetUniformMat4(const std::string &name, const glm::mat4 &matrix);
 
    static Result<ShaderProgram>
+   FromSource(const std::string &vertexSource,
+              const std::string &fragmentSource);
+
+   static Result<ShaderProgram>
    FromFiles(std::string vertexPath, std::string fragmentPath);
 };

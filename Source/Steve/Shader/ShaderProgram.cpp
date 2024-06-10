@@ -51,6 +51,32 @@ ShaderProgram::Use()
 }
 
 Result<ShaderProgram>
+ShaderProgram::FromSource(const std::string &vertexSource,
+                          const std::string &fragmentSource)
+{
+   Result<bool> res { false };
+
+   /* Vertex shader */
+   auto vertexShader = Shader::FromSource(Shader::Type::Vertex, vertexSource);
+   res = vertexShader.Allocate().WithErrorHandler([](Ref<Error> error) {
+      error->Push({ STEVE_SHADER_PROGRAM_INITIALIZE_FAILED,
+                    "Failed to initialize shader program from shader files." });
+   });
+   if (!res) return { {}, res.error };
+
+   /* Fragment shader */
+   auto fragmentShader =
+       Shader::FromSource(Shader::Type::Fragment, fragmentSource);
+   res = fragmentShader.Allocate().WithErrorHandler([](Ref<Error> error) {
+      error->Push({ STEVE_SHADER_PROGRAM_INITIALIZE_FAILED,
+                    "Failed to initialize shader program from shader files." });
+   });
+   if (!res) return { {}, res.error };
+
+   return { { vertexShader, fragmentShader } };
+}
+
+Result<ShaderProgram>
 ShaderProgram::FromFiles(std::string vertexPath, std::string fragmentPath)
 {
    Result<bool> res { false };

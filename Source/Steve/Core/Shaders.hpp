@@ -5,7 +5,7 @@
 #pragma once
 
 // Shaders/fragment.fs
-const char* SHADER_FRAGMENT = R"(#version 330 core
+const char* STEVE_SHADER_SOURCE_FRAGMENT = R"(#version 330 core
 
 in vec4  outColor;
 out vec4 FragColor;
@@ -18,7 +18,7 @@ main()
 )";
 
 // Shaders/vertex.vs
-const char* SHADER_VERTEX = R"(#version 330 core
+const char* STEVE_SHADER_SOURCE_VERTEX = R"(#version 330 core
 
 layout(location = 0) in vec3 aPos;
 layout(location = 1) in vec4 aColor;
