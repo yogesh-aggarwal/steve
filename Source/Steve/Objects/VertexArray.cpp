@@ -6,7 +6,7 @@ Result<bool>
 VertexArray::AllocateAndBind()
 {
    glGenVertexArrays(1, &m_ID);
-   Bind();
+   auto _ = Bind();
 
    return true;
 }
