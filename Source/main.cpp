@@ -76,4 +76,11 @@ class Application : public ApplicationWindow::LifeCycle
    }
 };
 
-STEVE_MAIN("Steve Woss", 800, 600, Application)
+ApplicationWindow::Configuration config {
+   "Steve",
+   1920,
+   1080,
+   new Application(),
+};
+
+STEVE_MAIN(config)
