@@ -29,7 +29,7 @@ for shader in shaders:
     shader_file_content += "\n"
     shader_file_content += f"// Shaders/{shader['filename']}\n"
     shader_file_content += (
-        f'const char* SHADER_{shader['codename']} = R"({shader['content']})";\n'
+        f'const char* STEVE_SHADER_SOURCE_{shader['codename']} = R"({shader['content']})";\n'
     )
 
 
