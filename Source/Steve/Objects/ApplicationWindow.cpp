@@ -7,20 +7,30 @@ ApplicationWindow::State s_State;
 Result<bool>
 ApplicationWindow::Initialize(Configuration config)
 {
-   s_State.Title        = config.Title;
-   s_State.Width        = config.Width;
-   s_State.Height       = config.Height;
-   s_State.LifeCyclePtr = config.LifeCyclePtr;
-   s_State.IsRunning    = false;
-   s_State.Window       = nullptr;
+   /* Initialize state */
+   {
+      s_State.Title  = config.Title;
+      s_State.Width  = config.Width;
+      s_State.Height = config.Height;
 
-   glfwInit();
-   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+      s_State.LifeCyclePtr = config.LifeCyclePtr;
+
+      s_State.IsVSync = config.IsVSync;
+
+      s_State.IsRunning = false;
+      s_State.Window    = nullptr;
+   }
+
+   /* Initialize GLFW and OpenGL */
+   {
+      glfwInit();
+      glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+      glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+      glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #ifdef __APPLE__
-   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);   // MacOS only
+      glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);   // MacOS only
 #endif
+   }
 
    s_State.Window = glfwCreateWindow(s_State.Width,
                                      s_State.Height,
@@ -35,7 +45,7 @@ ApplicationWindow::Initialize(Configuration config)
                            "Failed to create application window" }) };
    }
 
-   glfwSwapInterval(1);   // Enable vsync
+   glfwSwapInterval(s_State.IsVSync);   // Enable vsync
    glfwMakeContextCurrent(s_State.Window);
    glfwSetFramebufferSizeCallback(
        s_State.Window,
@@ -131,6 +141,19 @@ int
 ApplicationWindow::GetHeight()
 {
    return s_State.Height;
+}
+
+void
+ApplicationWindow::SetVSync(bool enabled)
+{
+   s_State.IsVSync = enabled;
+   glfwSwapInterval(s_State.IsVSync);
+}
+
+void
+ApplicationWindow::RefreshVSyncEnableState()
+{
+   glfwSwapInterval(s_State.IsVSync);
 }
 
 void

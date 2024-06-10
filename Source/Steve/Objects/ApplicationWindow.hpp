@@ -44,6 +44,8 @@ public:
       uint32_t    Height;
 
       LifeCycle *LifeCyclePtr;
+
+      bool IsVSync;
    };
 
    struct State : Configuration
@@ -70,6 +72,12 @@ public:
 
    static int
    GetHeight();
+
+   static void
+   SetVSync(bool enabled);
+
+   static void
+   RefreshVSyncEnableState();
 
 private:
    static void
