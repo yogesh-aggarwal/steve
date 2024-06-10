@@ -2,18 +2,18 @@
 
 #include <iostream>
 
-ApplicationWindow::ApplicationWindow(std::string title,
-                                     uint32_t    width,
-                                     uint32_t    height,
-                                     Callbacks   callbacks)
-    : m_Window(nullptr), m_IsRunning(false), m_Title(std::move(title)),
-      m_Width(width), m_Height(height), m_Callbacks(callbacks)
-{
-}
+ApplicationWindow::State s_State;
 
 Result<bool>
-ApplicationWindow::Initialize()
+ApplicationWindow::Initialize(Configuration config)
 {
+   s_State.Title        = config.Title;
+   s_State.Width        = config.Width;
+   s_State.Height       = config.Height;
+   s_State.LifeCyclePtr = config.LifeCyclePtr;
+   s_State.IsRunning    = false;
+   s_State.Window       = nullptr;
+
    glfwInit();
    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -22,9 +22,12 @@ ApplicationWindow::Initialize()
    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);   // MacOS only
 #endif
 
-   m_Window =
-       glfwCreateWindow(m_Width, m_Height, m_Title.c_str(), nullptr, nullptr);
-   if (!m_Window)
+   s_State.Window = glfwCreateWindow(s_State.Width,
+                                     s_State.Height,
+                                     s_State.Title.c_str(),
+                                     nullptr,
+                                     nullptr);
+   if (!s_State.Window)
    {
       Terminate();
       return { false,
@@ -33,9 +36,9 @@ ApplicationWindow::Initialize()
    }
 
    glfwSwapInterval(1);   // Enable vsync
-   glfwMakeContextCurrent(m_Window);
+   glfwMakeContextCurrent(s_State.Window);
    glfwSetFramebufferSizeCallback(
-       m_Window,
+       s_State.Window,
        [](GLFWwindow *window, int width, int height) {
           glViewport(0, 0, width, height);
        });
@@ -48,7 +51,7 @@ ApplicationWindow::Initialize()
                      "Failed to initialize GLAD in application window" }) };
    }
 
-   if (m_Callbacks.OnInit) m_Callbacks.OnInit();
+   s_State.LifeCyclePtr->OnInit();
 
    return true;
 }
@@ -56,22 +59,22 @@ ApplicationWindow::Initialize()
 Result<bool>
 ApplicationWindow::Run()
 {
-   if (!m_Window)
+   if (!s_State.Window)
    {
       return { false,
                new Error({ STEVE_APPLICATION_WINDOW_NOT_INITIALIZED,
                            "Application window not initialized" }) };
    }
-   if (m_IsRunning)
+   if (s_State.IsRunning)
    {
       return { false,
                new Error({ STEVE_APPLICATION_WINDOW_ALREADY_RUNNING,
                            "Application window already running" }) };
    }
 
-   m_IsRunning = true;
+   s_State.IsRunning = true;
 
-   while (!glfwWindowShouldClose(m_Window))
+   while (!glfwWindowShouldClose(s_State.Window))
    {
       HandleInputs();
 
@@ -82,50 +85,47 @@ ApplicationWindow::Run()
       glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT);
 
-      if (m_Callbacks.OnRender) m_Callbacks.OnRender();
+      s_State.LifeCyclePtr->OnRender();
 
-      glfwSwapBuffers(m_Window);
+      glfwSwapBuffers(s_State.Window);
       glfwPollEvents();
    }
 
-   m_IsRunning = false;
+   s_State.IsRunning = false;
 
    return true;
 }
 
-void
-ApplicationWindow::SetCallbacks(Callbacks callbacks)
+bool
+ApplicationWindow::IsRunning()
 {
-   m_Callbacks = callbacks;
+   return s_State.IsRunning;
 }
 
 void
 ApplicationWindow::Terminate()
 {
-   if (m_Callbacks.OnTerminate) m_Callbacks.OnTerminate();
+   s_State.LifeCyclePtr->OnTerminate();
 
    glfwTerminate();
 
-   m_Window    = nullptr;
-   m_IsRunning = false;
-   m_Callbacks = {};
+   s_State.Window       = nullptr;
+   s_State.IsRunning    = false;
+   s_State.LifeCyclePtr = nullptr;
 
-   glfwSetWindowShouldClose(m_Window, true);
+   glfwSetWindowShouldClose(s_State.Window, true);
 }
 
 void
 ApplicationWindow::HandleInputs()
 {
-   if (m_IsRunning) return;
+   if (s_State.IsRunning) return;
 
-   if (m_Callbacks.OnKey)
-   {
-      m_Callbacks.OnKey(glfwGetKey(m_Window, GLFW_KEY_ESCAPE));
-   }
+   s_State.LifeCyclePtr->OnKey(glfwGetKey(s_State.Window, GLFW_KEY_ESCAPE));
 
-   if (glfwGetKey(m_Window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+   if (glfwGetKey(s_State.Window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
    {
-      glfwSetWindowShouldClose(m_Window, true);
+      glfwSetWindowShouldClose(s_State.Window, true);
       return;
    }
 }

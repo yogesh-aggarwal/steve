@@ -11,51 +11,54 @@
 class ApplicationWindow
 {
 public:
-   struct Callbacks
+   class LifeCycle
    {
-      std::function<void()>    OnInit;
-      std::function<void()>    OnRender;
-      std::function<void()>    OnTerminate;
-      std::function<void(int)> OnKey;
+   public:
+      LifeCycle()          = default;
+      virtual ~LifeCycle() = default;
+
+      virtual void
+      OnInit() = 0;
+
+      virtual void
+      OnRender() = 0;
+
+      virtual void
+      OnTerminate() = 0;
+
+      virtual void
+      OnKey(int key) = 0;
    };
 
-private:
-   GLFWwindow *m_Window;
-   bool        m_IsRunning;
-   Callbacks   m_Callbacks;
+   struct Configuration
+   {
+      std::string Title;
+      uint32_t    Width;
+      uint32_t    Height;
 
-   std::string m_Title;
-   uint32_t    m_Width;
-   uint32_t    m_Height;
+      LifeCycle *LifeCyclePtr;
+   };
 
-   std::function<void()> m_RenderCallback;
+   struct State : Configuration
+   {
+      GLFWwindow *Window;
+      bool        IsRunning;
+   };
 
 public:
-   ApplicationWindow(std::string title,
-                     uint32_t    width,
-                     uint32_t    height,
-                     Callbacks   callbacks);
-   ~ApplicationWindow() = default;
+   static Result<bool>
+   Initialize(Configuration config);
 
-   Result<bool>
-   Initialize();
-
-   Result<bool>
+   static Result<bool>
    Run();
 
-   inline bool
-   IsRunning() const
-   {
-      return m_IsRunning;
-   }
+   static bool
+   IsRunning();
 
-   void
-   SetCallbacks(Callbacks callbacks);
-
-   void
+   static void
    Terminate();
 
 private:
-   void
+   static void
    HandleInputs();
 };
