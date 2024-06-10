@@ -12,7 +12,7 @@
 #include <Steve/Objects/VertexBufferLayout.hpp>
 #include <Steve/Draw/Draw.hpp>
 #include <Steve/Renderer/Renderer.hpp>
-#include <Steve/Objects/ApplicationWindow.hpp>
+#include <Steve/Application/ApplicationWindow.hpp>
 
 class Application : public ApplicationWindow::LifeCycle
 {
@@ -55,8 +55,6 @@ class Application : public ApplicationWindow::LifeCycle
          q = Steve::Draw::DrawQuad(1.0f, 1.0f, 1918.0f, 38.0f, glm::vec4(1.0f));
          Renderer::DrawVertices({ q.begin(), q.end() });
       }
-
-      Renderer::PrintVertices();
 
       // End scene
       _ = Renderer::EndScene().WithErrorHandler([](Ref<Error> error) {
