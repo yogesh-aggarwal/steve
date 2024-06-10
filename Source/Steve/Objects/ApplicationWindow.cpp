@@ -41,6 +41,11 @@ ApplicationWindow::Initialize(Configuration config)
        s_State.Window,
        [](GLFWwindow *window, int width, int height) {
           glViewport(0, 0, width, height);
+
+          s_State.Width  = width;
+          s_State.Height = height;
+
+          s_State.LifeCyclePtr->OnRender();
        });
    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
    {

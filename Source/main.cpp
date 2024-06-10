@@ -56,7 +56,7 @@ class Application : public ApplicationWindow::LifeCycle
          Renderer::DrawVertices({ q.begin(), q.end() });
       }
 
-      Renderer::PrintVertices("vertices.txt");
+      Renderer::PrintVertices();
 
       // End scene
       _ = Renderer::EndScene().WithErrorHandler([](Ref<Error> error) {
