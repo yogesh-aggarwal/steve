@@ -14,10 +14,10 @@
 #include <Steve/Renderer/Renderer.hpp>
 #include <Steve/Objects/ApplicationWindow.hpp>
 
-namespace Application
+class Application : public ApplicationWindow::LifeCycle
 {
    void
-   OnInit()
+   OnInit() override
    {
       auto _ = Renderer::Initialize().WithErrorHandler([](Ref<Error> error) {
          error->Push({ STEVE_APPLICATION_INITIALIZATION_FAILED,
@@ -31,7 +31,7 @@ namespace Application
    }
 
    void
-   OnRender()
+   OnRender() override
    {
       auto _ = Result<bool> { false };
 
@@ -49,12 +49,14 @@ namespace Application
       // Draw a quad
       {
          std::array<Vertex, 4> q =
-             Steve::Draw::DrawQuad(0.0f, 0.0f, 1.0f, 1.0f, glm::vec4(0.0f));
+             Steve::Draw::DrawQuad(0.0f, 0.0f, 1920.0f, 40.0f, glm::vec4(0.0f));
          Renderer::DrawVertices({ q.begin(), q.end() });
 
-         q = Steve::Draw::DrawQuad(0.01f, 0.01f, 0.98f, 0.98f, glm::vec4(1.0f));
+         q = Steve::Draw::DrawQuad(1.0f, 1.0f, 1918.0f, 38.0f, glm::vec4(1.0f));
          Renderer::DrawVertices({ q.begin(), q.end() });
       }
+
+      Renderer::SaveVerticesToFile("vertices.txt");
 
       // End scene
       _ = Renderer::EndScene().WithErrorHandler([](Ref<Error> error) {
@@ -64,14 +66,14 @@ namespace Application
    }
 
    void
-   OnTerminate()
+   OnTerminate() override
    {
    }
 
    void
-   OnKey(int key)
+   OnKey(int key) override
    {
    }
-}
+};
 
 STEVE_MAIN("Steve Woss", 800, 600, Application)

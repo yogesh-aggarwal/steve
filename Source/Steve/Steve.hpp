@@ -1,22 +1,24 @@
 #pragma once
 
-#define STEVE_MAIN(TITLE, WIDTH, HEIGHT, APPLICATION_NAMESPACE)   \
-   int main()                                                     \
-   {                                                              \
-      system("clear");                                            \
-                                                                  \
-      ApplicationWindow::Callbacks callbacks {};                  \
-      callbacks.OnInit      = APPLICATION_NAMESPACE::OnInit;      \
-      callbacks.OnRender    = APPLICATION_NAMESPACE::OnRender;    \
-      callbacks.OnTerminate = APPLICATION_NAMESPACE::OnTerminate; \
-      callbacks.OnKey       = APPLICATION_NAMESPACE::OnKey;       \
-                                                                  \
-      auto _ = Result<bool> { false };                            \
-                                                                  \
-      ApplicationWindow window(TITLE, WIDTH, HEIGHT, callbacks);  \
-      _ = window.Initialize();                                    \
-      _ = window.Run();                                           \
-      window.Terminate();                                         \
-                                                                  \
-      return EXIT_SUCCESS;                                        \
+#define STEVE_MAIN(TITLE, WIDTH, HEIGHT, APPLICATION_LIFECYCLE) \
+   int main()                                                   \
+   {                                                            \
+      system("clear");                                          \
+                                                                \
+      APPLICATION_LIFECYCLE lifecycle {};                       \
+                                                                \
+      ApplicationWindow::Configuration config {                 \
+         .Title        = TITLE,                                 \
+         .Width        = WIDTH,                                 \
+         .Height       = HEIGHT,                                \
+         .LifeCyclePtr = &lifecycle,                            \
+      };                                                        \
+                                                                \
+      auto _ = Result<bool> { false };                          \
+                                                                \
+      _ = ApplicationWindow::Initialize(config);                \
+      _ = ApplicationWindow::Run();                             \
+      ApplicationWindow::Terminate();                           \
+                                                                \
+      return EXIT_SUCCESS;                                      \
    }
