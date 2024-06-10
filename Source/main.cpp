@@ -64,23 +64,13 @@ class Application : public ApplicationWindow::LifeCycle
                        "Failed to end rendering scene." });
       });
    }
-
-   void
-   OnTerminate() override
-   {
-   }
-
-   void
-   OnKey(int key) override
-   {
-   }
 };
 
 ApplicationWindow::Configuration config {
-   "Steve",
-   1920,
-   1080,
-   new Application(),
+   .Title        = "Steve",
+   .Width        = 800,
+   .Height       = 600,
+   .LifeCyclePtr = new Application(),
 };
 
 STEVE_MAIN(config)

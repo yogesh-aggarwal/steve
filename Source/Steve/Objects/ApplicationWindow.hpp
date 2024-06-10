@@ -14,20 +14,27 @@ public:
    class LifeCycle
    {
    public:
-      LifeCycle()          = default;
-      virtual ~LifeCycle() = default;
+      LifeCycle() = default;
 
       virtual void
-      OnInit() = 0;
+      OnInit()
+      {
+      }
 
       virtual void
-      OnRender() = 0;
+      OnRender()
+      {
+      }
 
       virtual void
-      OnTerminate() = 0;
+      OnTerminate()
+      {
+      }
 
       virtual void
-      OnKey(int key) = 0;
+      OnKey(int key)
+      {
+      }
    };
 
    struct Configuration
