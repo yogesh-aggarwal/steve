@@ -4,6 +4,7 @@
 
 #include <glm/ext.hpp>
 
+#include <Steve/Core/Shaders.hpp>
 #include <Steve/Core/Helpers.hpp>
 
 Ref<Renderer::State> state = nullptr;
@@ -20,10 +21,16 @@ Renderer::Initialize()
    auto _ = Result<bool> { false };
 
    ShaderProgram shaderProgram =
-       ShaderProgram::FromFiles("../Shaders/vertex.vs",
-                                "../Shaders/fragment.fs")
+       ShaderProgram::FromSource(STEVE_SHADER_SOURCE_VERTEX,
+                                 STEVE_SHADER_SOURCE_FRAGMENT)
            .value;
    _ = shaderProgram.Allocate();
+   if (!_)
+   {
+      return { false,
+               new Error({ STEVE_RENDERER_STATE_INITIALIZATION_FAILED,
+                           "Failed to intialize renderer state." }) };
+   }
 
    VertexArray vao {};
    _ = vao.AllocateAndBind();
