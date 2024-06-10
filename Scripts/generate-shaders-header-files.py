@@ -1,4 +1,14 @@
+#!/usr/bin/env python3
+
 import os
+from datetime import datetime
+
+def get_formatted_datetime():
+    # Get the current date and time
+    now = datetime.now()
+    # Format the date and time
+    formatted_datetime = now.strftime("%Y-%m-%d %H:%M:%S")
+    return formatted_datetime
 
 
 shader_files = os.listdir("./Shaders")
@@ -20,6 +30,8 @@ for shader in shader_files:
 shader_file_content = ""
 
 shader_file_content += "/* --------------------------------------------------------------------------------- */\n"
+shader_file_content += f"/* Generated at {get_formatted_datetime()}                                                  */\n"
+shader_file_content += "/* ---------------------------------                                                 */\n"
 shader_file_content += "/* THIS FILE IS GENERATED USING A GENERATOR SCRIPT. DO NOT MODIFY THIS FILE DIRECTLY */\n"
 shader_file_content += "/* --------------------------------------------------------------------------------- */\n\n"
 shader_file_content += "#pragma once\n"
