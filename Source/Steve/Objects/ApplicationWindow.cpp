@@ -116,6 +116,18 @@ ApplicationWindow::Terminate()
    glfwSetWindowShouldClose(s_State.Window, true);
 }
 
+int
+ApplicationWindow::GetWidth()
+{
+   return s_State.Width;
+}
+
+int
+ApplicationWindow::GetHeight()
+{
+   return s_State.Height;
+}
+
 void
 ApplicationWindow::HandleInputs()
 {

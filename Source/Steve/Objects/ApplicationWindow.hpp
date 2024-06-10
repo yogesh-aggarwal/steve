@@ -58,6 +58,12 @@ public:
    static void
    Terminate();
 
+   static int
+   GetWidth();
+
+   static int
+   GetHeight();
+
 private:
    static void
    HandleInputs();
