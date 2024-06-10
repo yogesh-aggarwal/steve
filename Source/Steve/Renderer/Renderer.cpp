@@ -1,5 +1,9 @@
 #include "Renderer.hpp"
 
+#include <iostream>
+
+#include <glm/ext.hpp>
+
 #include <Steve/Core/Helpers.hpp>
 
 Ref<Renderer::State> state = nullptr;
@@ -99,7 +103,7 @@ Renderer::BeginScene()
    state->hasBegunScene = true;
    state->vertices.clear();
 
-   state->shaderProgram.Use();
+   auto _ = state->shaderProgram.Use();
 
    return true;
 }
@@ -122,6 +126,11 @@ Renderer::EndScene()
    if (state->vertices.empty()) { return true; }
 
    auto _ = Result<bool> { false };
+
+   glm::mat4 projectionMat =
+       glm::ortho(0.0f, 1920.0f, 0.0f, 1080.0f, -1.0f, 1.0f);
+
+   _ = state->shaderProgram.SetUniformMat4("u_Projection", projectionMat);
 
    _ = state->vertexBuffer.BindAndUploadData(state->vertices);
    _ = state->shaderProgram.Use();
@@ -161,4 +170,29 @@ Renderer::DrawVertices(const std::vector<Vertex> &vertices)
    state->vertices.insert(state->vertices.end(),
                           vertices.begin(),
                           vertices.end());
+}
+
+void
+Renderer::PrintVertices()
+{
+   system("clear");
+
+   std::cout
+       << "-------------------------------------------------------------------"
+       << std::endl;
+   std::cout << "x" << "\t" << "y" << "\t" << "z" << "\t" << "r" << "\t" << "g"
+             << "\t" << "b" << "\t" << "a" << std::endl;
+   std::cout
+       << "-------------------------------------------------------------------"
+       << std::endl;
+   for (const auto &vertex : state->vertices)
+   {
+      std::cout << vertex.position.x << "\t" << vertex.position.y << "\t"
+                << vertex.position.z << "\t" << vertex.color.r << "\t"
+                << vertex.color.g << "\t" << vertex.color.b << "\t"
+                << vertex.color.a << std::endl;
+   }
+   std::cout
+       << "-------------------------------------------------------------------"
+       << std::endl;
 }

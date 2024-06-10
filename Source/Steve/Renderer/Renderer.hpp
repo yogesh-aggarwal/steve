@@ -44,4 +44,7 @@ namespace Renderer
 
    void
    DrawVertices(const std::vector<Vertex> &vertices);
+
+   void
+   PrintVertices();
 };
