@@ -2,6 +2,8 @@
 
 #include <array>
 
+#include <glm/mat4x4.hpp>
+
 #include <Steve/Core/Result.tcc>
 
 #include "Shader.hpp"
@@ -26,6 +28,9 @@ public:
 
    Result<bool>
    Use();
+
+   Result<bool>
+   SetUniformMat4(const std::string &name, const glm::mat4 &matrix);
 
    static Result<ShaderProgram>
    FromFiles(std::string vertexPath, std::string fragmentPath);

@@ -1,6 +1,7 @@
 #include "ShaderProgram.hpp"
 
 #include <glad/glad.h>
+#include <glm/gtc/type_ptr.hpp>
 
 ShaderProgram::ShaderProgram() : m_VertexShader({}), m_FragmentShader({}) {}
 
@@ -85,4 +86,19 @@ ShaderProgram::FromFiles(std::string vertexPath, std::string fragmentPath)
    if (!res) return { {}, fragmentShader.error };
 
    return { { vertexShader.value, fragmentShader.value } };
+}
+
+Result<bool>
+ShaderProgram::SetUniformMat4(const std::string &name, const glm::mat4 &data)
+{
+   int location = glGetUniformLocation(m_ID, name.c_str());
+   if (location == -1)
+   {
+      return { false,
+               new Error({ STEVE_SHADER_PROGRAM_UNIFORM_NOT_FOUND,
+                           "Failed to find uniform in shader program." }) };
+   }
+
+   glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(data));
+   return true;
 }
