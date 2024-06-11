@@ -6,6 +6,7 @@
 
 #include <Steve/Core/Shaders.hpp>
 #include <Steve/Core/Helpers.hpp>
+#include <Steve/Application/ApplicationWindow.hpp>
 
 Ref<Renderer::State> state = nullptr;
 
@@ -127,9 +128,13 @@ Renderer::EndScene()
 
    auto _ = Result<bool> { false };
 
-   // glm::mat4 projectionMat =
-   //     glm::ortho(0.0f, 1920.0f, 0.0f, 1080.0f, -1.0f, 1.0f);
-   // _ = state->shaderProgram.SetUniformMat4("u_Projection", projectionMat);
+   glm::mat4 projectionMat = glm::ortho(0.0f,
+                                        (float)ApplicationWindow::GetWidth(),
+                                        0.0f,
+                                        (float)ApplicationWindow::GetHeight(),
+                                        -1.0f,
+                                        1.0f);
+   _ = state->shaderProgram.SetUniformMat4("u_Projection", projectionMat);
 
    _ = state->vertexBuffer.BindAndUploadData(state->vertices);
    _ = state->shaderProgram.Use();

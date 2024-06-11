@@ -52,7 +52,7 @@ ApplicationWindow::Initialize(Configuration config)
                            "Failed to create application window" }) };
    }
 
-   glfwSwapInterval(s_State.IsVSync);   // Enable vsync
+   glfwSwapInterval(s_State.IsVSync);
    glfwMakeContextCurrent(s_State.Window);
    glfwSetFramebufferSizeCallback(
        s_State.Window,
