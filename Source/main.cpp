@@ -54,8 +54,15 @@ class Application : public ApplicationWindow::LifeCycle
              Steve::Draw::DrawQuad(0.0f,
                                    0.0f,
                                    ApplicationWindow::GetWidth(),
-                                   30.0f,
-                                   glm::vec4(1.0f));
+                                   40.0f,
+                                   glm::vec4(0.2f, 0.2f, 0.2f, 1.0f));
+         Renderer::DrawVertices({ q.begin(), q.end() });
+
+         q = Steve::Draw::DrawQuad(4.0f,
+                                   4.0f,
+                                   ApplicationWindow::GetWidth() / 2 - 4.0f,
+                                   32.0f,
+                                   glm::vec4(0.3f, 0.3f, 0.3f, 1.0f));
          Renderer::DrawVertices({ q.begin(), q.end() });
       }
 

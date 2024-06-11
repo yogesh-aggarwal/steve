@@ -13,6 +13,9 @@ endif
 # Targets
 # -----------------------------------------------------------------------------
 
+clean:
+	rm -rf Build/
+
 setup_debian:
 	./Scripts/setup-debian.sh
 
