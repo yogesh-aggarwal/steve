@@ -1,5 +1,5 @@
 /* --------------------------------------------------------------------------------- */
-/* Generated at 2024-06-11 09:26:56                                                  */
+/* Generated at 2024-06-11 10:37:38                                                  */
 /* ---------------------------------                                                 */
 /* THIS FILE IS GENERATED USING A GENERATOR SCRIPT. DO NOT MODIFY THIS FILE DIRECTLY */
 /* --------------------------------------------------------------------------------- */
@@ -28,12 +28,13 @@ layout(location = 1) in vec4 aColor;
 out vec4 outColor;
 
 // orthographic projection matrix
-uniform mat4 u_Projection;
+// uniform mat4 u_Projection;
 
 void
 main()
 {
-   gl_Position = vec4(aPos.xyz, 1.0f) * u_Projection;
-   outColor    = aColor;
+   gl_Position = vec4(aPos.xyz, 1.0f);
+   //   * u_Projection;
+   outColor = aColor;
 }
 )";
