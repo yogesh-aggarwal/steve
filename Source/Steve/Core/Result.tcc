@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <functional>
+#include <tuple>
 
 #include <Steve/Core/Error.hpp>
 #include <Steve/Core/Helpers.hpp>
@@ -24,6 +25,8 @@ public:
    }
 
    ~Result() = default;
+
+   operator std::tuple<T, Ref<Error>>() { return { value, error }; }
 
    operator bool() const
    {
@@ -53,6 +56,12 @@ public:
       if (error) handler(error);
 
       return *this;
+   }
+
+   std::tuple<T, Ref<Error>>
+   AsTuple()
+   {
+      return { value, error };
    }
 };
 
