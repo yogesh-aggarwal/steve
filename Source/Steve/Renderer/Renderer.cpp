@@ -20,62 +20,55 @@ Renderer::Initialize()
 {
    auto _ = Result<bool> { false };
 
-   ShaderProgram shaderProgram =
+   auto shaderProgram =
        ShaderProgram::FromSource(STEVE_SHADER_SOURCE_VERTEX,
                                  STEVE_SHADER_SOURCE_FRAGMENT)
-           .value;
-   _ = shaderProgram.Allocate();
-   if (!_)
-   {
-      return { false,
-               new Error({ STEVE_RENDERER_STATE_INITIALIZATION_FAILED,
-                           "Failed to intialize renderer state." }) };
-   }
+           .WithErrorHandler([](Ref<Error> error) {
+              error->Push({ STEVE_RENDERER_STATE_INITIALIZATION_FAILED,
+                            "Failed to intialize renderer state." });
+           });
+   if (!shaderProgram) return { false, shaderProgram.error };
+
+   _ = shaderProgram.value.Allocate().WithErrorHandler([](Ref<Error> error) {
+      error->Push({ STEVE_RENDERER_STATE_INITIALIZATION_FAILED,
+                    "Failed to intialize renderer state." });
+   });
+   if (!_) return { false, _.error };
 
    VertexArray vao {};
-   _ = vao.AllocateAndBind();
-   if (!_)
-   {
-      return { false,
-               new Error({ STEVE_RENDERER_STATE_INITIALIZATION_FAILED,
-                           "Failed to intialize renderer state." }) };
-   }
+   _ = vao.AllocateAndBind().WithErrorHandler([](Ref<Error> error) {
+      error->Push({ STEVE_RENDERER_STATE_INITIALIZATION_FAILED,
+                    "Failed to intialize renderer state." });
+   });
+   if (!_) return { false, _.error };
 
    VertexBuffer vbo {};
-   _ = vbo.BindAndAllocate();
-   if (!_)
-   {
-      return { false,
-               new Error({ STEVE_RENDERER_STATE_INITIALIZATION_FAILED,
-                           "Failed to intialize renderer state." }) };
-   }
+   _ = vbo.BindAndAllocate().WithErrorHandler([](Ref<Error> error) {
+      error->Push({ STEVE_RENDERER_STATE_INITIALIZATION_FAILED,
+                    "Failed to intialize renderer state." });
+   });
+   if (!_) return { false, _.error };
 
    IndexBuffer ibo {};
-   _ = ibo.BindAndPopulate();
-   if (!_)
-   {
-      return { false,
-               new Error({ STEVE_RENDERER_STATE_INITIALIZATION_FAILED,
-                           "Failed to intialize renderer state." }) };
-   }
+   _ = ibo.BindAndPopulate().WithErrorHandler([](Ref<Error> error) {
+      error->Push({ STEVE_RENDERER_STATE_INITIALIZATION_FAILED,
+                    "Failed to intialize renderer state." });
+   });
+   if (!_) return { false, _.error };
 
    VertexBufferLayout positionLayout(0, 3, 0);
-   _ = positionLayout.Apply();
-   if (!_)
-   {
-      return { false,
-               new Error({ STEVE_RENDERER_STATE_INITIALIZATION_FAILED,
-                           "Failed to intialize renderer state." }) };
-   }
+   _ = positionLayout.Apply().WithErrorHandler([](Ref<Error> error) {
+      error->Push({ STEVE_RENDERER_STATE_INITIALIZATION_FAILED,
+                    "Failed to intialize renderer state." });
+   });
+   if (!_) return { false, _.error };
 
    VertexBufferLayout colorLayout(1, 4, 3);
-   _ = colorLayout.Apply();
-   if (!_)
-   {
-      return { false,
-               new Error({ STEVE_RENDERER_STATE_INITIALIZATION_FAILED,
-                           "Failed to intialize renderer state." }) };
-   }
+   _ = colorLayout.Apply().WithErrorHandler([](Ref<Error> error) {
+      error->Push({ STEVE_RENDERER_STATE_INITIALIZATION_FAILED,
+                    "Failed to intialize renderer state." });
+   });
+   if (!_) return { false, _.error };
 
    State m_State = {
       .hasInitialized = true,
@@ -84,7 +77,7 @@ Renderer::Initialize()
       .vertexArray    = vao,
       .vertexBuffer   = vbo,
       .indexBuffer    = ibo,
-      .shaderProgram  = shaderProgram,
+      .shaderProgram  = shaderProgram.value,
    };
    state = CreateRef<State>(m_State);
 
