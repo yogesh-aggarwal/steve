@@ -1,15 +1,21 @@
 #pragma once
 
-#define STEVE_MAIN(CONFIG)                       \
-   int main()                                    \
-   {                                             \
-      system("clear");                           \
-                                                 \
-      auto _ = Result<bool> { false };           \
-                                                 \
-      _ = ApplicationWindow::Initialize(CONFIG); \
-      _ = ApplicationWindow::Run();              \
-      ApplicationWindow::Terminate();            \
-                                                 \
-      return EXIT_SUCCESS;                       \
-   }
+#include <Steve/Steve.hpp>
+#include <Steve/Graphics/Draw/Draw.hpp>
+#include <Steve/Graphics/Renderer/Renderer.hpp>
+#include <Steve/Application/ApplicationWindow.hpp>
+
+class Application : public ApplicationWindow::LifeCycle
+{
+   void
+   OnInit() override;
+
+   void
+   OnRender() override;
+};
+
+namespace Steve
+{
+   Result<bool>
+   Run();
+}

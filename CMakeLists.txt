@@ -98,8 +98,8 @@ message("[(---- Done Linking Libraries ----)]\n")
 # ---- PCHs ------------------------------------------------------------------------------------------------------------
 # ----------------------------------------------------------------------------------------------------------------------
 
-FILE(GLOB_RECURSE STEVE_PCH_FILES Source/Core/*)
-target_precompile_headers(${PROJECT_NAME} PUBLIC ${STEVE_PCH_FILES})
+# FILE(GLOB_RECURSE STEVE_PCH_FILES Source/Steve/Core/*.hpp)
+# target_precompile_headers(${PROJECT_NAME} PUBLIC ${STEVE_PCH_FILES})
 
 # ----------------------------------------------------------------------------------------------------------------------
 # ---- Installation ----------------------------------------------------------------------------------------------------
