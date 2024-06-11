@@ -61,7 +61,7 @@ Steve::Run()
    auto _ = Result<bool> { false };
 
    ApplicationWindow::Configuration config {
-      .Title        = "Steve",
+      .Title        = "Steve Browser",
       .Width        = 800,
       .Height       = 600,
       .LifeCyclePtr = new Application(),
