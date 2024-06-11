@@ -4,11 +4,8 @@
 #include <vector>
 
 #include <Steve/Core/Result.tcc>
-#include <Steve/Objects/Vertex.hpp>
-#include <Steve/Objects/VertexArray.hpp>
-#include <Steve/Objects/VertexBuffer.hpp>
-#include <Steve/Objects/IndexBuffer.hpp>
-#include <Steve/Shader/ShaderProgram.hpp>
+
+#include "Backend/Backend.hpp"
 
 namespace Renderer
 {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+
 #include <Steve/Core/Result.tcc>
 
 class VertexBufferLayout

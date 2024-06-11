@@ -1,7 +1,8 @@
 #include "VertexBufferLayout.hpp"
 
 #include <glad/glad.h>
-#include <Steve/Objects/Vertex.hpp>
+
+#include <Steve/Graphics/Renderer/Core/Vertex.hpp>
 
 VertexBufferLayout::VertexBufferLayout(uint32_t location,
                                        uint32_t attributeSize,

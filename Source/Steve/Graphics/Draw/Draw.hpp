@@ -3,7 +3,7 @@
 #include <array>
 #include <glm/glm.hpp>
 
-#include <Steve/Objects/Vertex.hpp>
+#include <Steve/Graphics/Renderer/Core/Vertex.hpp>
 
 namespace Steve
 {

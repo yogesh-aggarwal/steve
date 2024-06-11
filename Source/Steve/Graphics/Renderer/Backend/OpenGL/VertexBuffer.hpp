@@ -4,9 +4,10 @@
 
 #include <glad/glad.h>
 
-#include <Steve/Objects/Vertex.hpp>
-#include <Steve/Objects/VertexArray.hpp>
-#include <Steve/Objects/VertexBufferLayout.hpp>
+#include <Steve/Graphics/Renderer/Core/Vertex.hpp>
+
+#include "VertexArray.hpp"
+#include "VertexBufferLayout.hpp"
 
 class VertexBuffer
 {

@@ -3,15 +3,8 @@
 #include <string>
 
 #include <Steve/Steve.hpp>
-#include <Steve/Shader/Shader.hpp>
-#include <Steve/Shader/ShaderProgram.hpp>
-#include <Steve/Objects/Vertex.hpp>
-#include <Steve/Objects/IndexBuffer.hpp>
-#include <Steve/Objects/VertexArray.hpp>
-#include <Steve/Objects/VertexBuffer.hpp>
-#include <Steve/Objects/VertexBufferLayout.hpp>
-#include <Steve/Draw/Draw.hpp>
-#include <Steve/Renderer/Renderer.hpp>
+#include <Steve/Graphics/Draw/Draw.hpp>
+#include <Steve/Graphics/Renderer/Renderer.hpp>
 #include <Steve/Application/ApplicationWindow.hpp>
 
 class Application : public ApplicationWindow::LifeCycle
