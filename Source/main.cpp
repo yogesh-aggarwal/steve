@@ -30,8 +30,6 @@ class Application : public ApplicationWindow::LifeCycle
       }
    }
 
-   float position = 0.0f;
-
    void
    OnRender() override
    {
