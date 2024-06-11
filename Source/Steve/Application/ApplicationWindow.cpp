@@ -2,25 +2,25 @@
 
 #include <iostream>
 
-ApplicationWindow::State s_State;
+ApplicationWindow::State s_ApplicationWindowState;
 
 Result<bool>
 ApplicationWindow::Initialize(Configuration config)
 {
    /* Initialize state */
    {
-      s_State.Title  = config.Title;
-      s_State.Width  = config.Width;
-      s_State.Height = config.Height;
+      s_ApplicationWindowState.Title  = config.Title;
+      s_ApplicationWindowState.Width  = config.Width;
+      s_ApplicationWindowState.Height = config.Height;
 
-      s_State.LifeCyclePtr = config.LifeCyclePtr;
+      s_ApplicationWindowState.LifeCyclePtr = config.LifeCyclePtr;
 
-      s_State.IsVSync = config.IsVSync;
+      s_ApplicationWindowState.IsVSync = config.IsVSync;
 
-      s_State.IsRunning = false;
-      s_State.Window    = nullptr;
+      s_ApplicationWindowState.IsRunning = false;
+      s_ApplicationWindowState.Window    = nullptr;
 
-      if (!s_State.LifeCyclePtr)
+      if (!s_ApplicationWindowState.LifeCyclePtr)
       {
          return { false,
                   new Error({ STEVE_APPLICATION_WINDOW_LIFECYCLE_NOT_PROVIDED,
@@ -39,12 +39,13 @@ ApplicationWindow::Initialize(Configuration config)
 #endif
    }
 
-   s_State.Window = glfwCreateWindow(s_State.Width,
-                                     s_State.Height,
-                                     s_State.Title.c_str(),
-                                     nullptr,
-                                     nullptr);
-   if (!s_State.Window)
+   s_ApplicationWindowState.Window =
+       glfwCreateWindow(s_ApplicationWindowState.Width,
+                        s_ApplicationWindowState.Height,
+                        s_ApplicationWindowState.Title.c_str(),
+                        nullptr,
+                        nullptr);
+   if (!s_ApplicationWindowState.Window)
    {
       Terminate();
       return { false,
@@ -52,17 +53,17 @@ ApplicationWindow::Initialize(Configuration config)
                            "Failed to create application window" }) };
    }
 
-   glfwSwapInterval(s_State.IsVSync);
-   glfwMakeContextCurrent(s_State.Window);
+   glfwSwapInterval(s_ApplicationWindowState.IsVSync);
+   glfwMakeContextCurrent(s_ApplicationWindowState.Window);
    glfwSetFramebufferSizeCallback(
-       s_State.Window,
+       s_ApplicationWindowState.Window,
        [](GLFWwindow *window, int width, int height) {
           glViewport(0, 0, width, height);
 
-          s_State.Width  = width;
-          s_State.Height = height;
+          s_ApplicationWindowState.Width  = width;
+          s_ApplicationWindowState.Height = height;
 
-          s_State.LifeCyclePtr->OnRender();
+          s_ApplicationWindowState.LifeCyclePtr->OnRender();
        });
    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
    {
@@ -73,7 +74,7 @@ ApplicationWindow::Initialize(Configuration config)
                      "Failed to initialize GLAD in application window" }) };
    }
 
-   s_State.LifeCyclePtr->OnInit();
+   s_ApplicationWindowState.LifeCyclePtr->OnInit();
 
    return true;
 }
@@ -81,22 +82,22 @@ ApplicationWindow::Initialize(Configuration config)
 Result<bool>
 ApplicationWindow::Run()
 {
-   if (!s_State.Window)
+   if (!s_ApplicationWindowState.Window)
    {
       return { false,
                new Error({ STEVE_APPLICATION_WINDOW_NOT_INITIALIZED,
                            "Application window not initialized" }) };
    }
-   if (s_State.IsRunning)
+   if (s_ApplicationWindowState.IsRunning)
    {
       return { false,
                new Error({ STEVE_APPLICATION_WINDOW_ALREADY_RUNNING,
                            "Application window already running" }) };
    }
 
-   s_State.IsRunning = true;
+   s_ApplicationWindowState.IsRunning = true;
 
-   while (!glfwWindowShouldClose(s_State.Window))
+   while (!glfwWindowShouldClose(s_ApplicationWindowState.Window))
    {
       HandleInputs();
 
@@ -104,13 +105,13 @@ ApplicationWindow::Run()
       int glError = glGetError();
       if (glError) std::cout << glError << std::endl;
 
-      s_State.LifeCyclePtr->OnRender();
+      s_ApplicationWindowState.LifeCyclePtr->OnRender();
 
-      glfwSwapBuffers(s_State.Window);
+      glfwSwapBuffers(s_ApplicationWindowState.Window);
       glfwPollEvents();
    }
 
-   s_State.IsRunning = false;
+   s_ApplicationWindowState.IsRunning = false;
 
    return true;
 }
@@ -118,60 +119,62 @@ ApplicationWindow::Run()
 bool
 ApplicationWindow::IsRunning()
 {
-   return s_State.IsRunning;
+   return s_ApplicationWindowState.IsRunning;
 }
 
 void
 ApplicationWindow::Terminate()
 {
-   if (!s_State.Window) return;
+   if (!s_ApplicationWindowState.Window) return;
 
-   s_State.LifeCyclePtr->OnTerminate();
+   s_ApplicationWindowState.LifeCyclePtr->OnTerminate();
 
-   s_State.Window       = nullptr;
-   s_State.IsRunning    = false;
-   s_State.LifeCyclePtr = nullptr;
+   s_ApplicationWindowState.Window       = nullptr;
+   s_ApplicationWindowState.IsRunning    = false;
+   s_ApplicationWindowState.LifeCyclePtr = nullptr;
 
    glfwTerminate();
 
-   glfwSetWindowShouldClose(s_State.Window, true);
+   glfwSetWindowShouldClose(s_ApplicationWindowState.Window, true);
 }
 
 int
 ApplicationWindow::GetWidth()
 {
-   return s_State.Width;
+   return s_ApplicationWindowState.Width;
 }
 
 int
 ApplicationWindow::GetHeight()
 {
-   return s_State.Height;
+   return s_ApplicationWindowState.Height;
 }
 
 void
 ApplicationWindow::SetVSync(bool enabled)
 {
-   s_State.IsVSync = enabled;
-   glfwSwapInterval(s_State.IsVSync);
+   s_ApplicationWindowState.IsVSync = enabled;
+   glfwSwapInterval(s_ApplicationWindowState.IsVSync);
 }
 
 void
 ApplicationWindow::RefreshVSyncEnableState()
 {
-   glfwSwapInterval(s_State.IsVSync);
+   glfwSwapInterval(s_ApplicationWindowState.IsVSync);
 }
 
 void
 ApplicationWindow::HandleInputs()
 {
-   if (s_State.IsRunning) return;
+   if (s_ApplicationWindowState.IsRunning) return;
 
-   s_State.LifeCyclePtr->OnKey(glfwGetKey(s_State.Window, GLFW_KEY_ESCAPE));
+   s_ApplicationWindowState.LifeCyclePtr->OnKey(
+       glfwGetKey(s_ApplicationWindowState.Window, GLFW_KEY_ESCAPE));
 
-   if (glfwGetKey(s_State.Window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+   if (glfwGetKey(s_ApplicationWindowState.Window, GLFW_KEY_ESCAPE) ==
+       GLFW_PRESS)
    {
-      glfwSetWindowShouldClose(s_State.Window, true);
+      glfwSetWindowShouldClose(s_ApplicationWindowState.Window, true);
       return;
    }
 }

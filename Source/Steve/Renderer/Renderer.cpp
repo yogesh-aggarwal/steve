@@ -8,7 +8,7 @@
 #include <Steve/Core/Helpers.hpp>
 #include <Steve/Application/ApplicationWindow.hpp>
 
-Ref<Renderer::State> s_State = nullptr;
+Ref<Renderer::State> s_RendererState = nullptr;
 
 bool
 Renderer::HasInitialized()
@@ -83,7 +83,7 @@ Renderer::Initialize()
       .indexBuffer   = ibo,
       .shaderProgram = shaderProgram.value,
    };
-   s_State = CreateRef<State>(m_State);
+   s_RendererState = CreateRef<State>(m_State);
 
    return true;
 }
@@ -91,23 +91,23 @@ Renderer::Initialize()
 Result<bool>
 Renderer::BeginScene()
 {
-   if (!s_State->hasInitialized)
+   if (!s_RendererState->hasInitialized)
    {
       return { false,
                new Error({ STEVE_RENDERER_NOT_INITIALIZED,
                            "Renderer not initialized" }) };
    }
-   if (s_State->hasBegunScene)
+   if (s_RendererState->hasBegunScene)
    {
       return { false,
                new Error({ STEVE_RENDERER_SCENE_ALREADY_BEGUN,
                            "Renderer scene already begun" }) };
    }
 
-   s_State->hasBegunScene = true;
-   s_State->vertices.clear();
+   s_RendererState->hasBegunScene = true;
+   s_RendererState->vertices.clear();
 
-   auto _ = s_State->shaderProgram.Use();
+   auto _ = s_RendererState->shaderProgram.Use();
 
    return true;
 }
@@ -115,26 +115,26 @@ Renderer::BeginScene()
 Result<bool>
 Renderer::EndScene()
 {
-   if (!s_State->hasInitialized)
+   if (!s_RendererState->hasInitialized)
    {
       return { false,
                new Error({ STEVE_RENDERER_NOT_INITIALIZED,
                            "Renderer not initialized" }) };
    }
-   if (!s_State->hasBegunScene)
+   if (!s_RendererState->hasBegunScene)
    {
       return { false,
                new Error({ STEVE_RENDERER_SCENE_HAS_NOT_BEGUN,
                            "Renderer scene has not begun" }) };
    }
-   if (s_State->vertices.empty()) { return true; }
+   if (s_RendererState->vertices.empty()) { return true; }
 
    auto _ = Result<bool> { false };
 
-   glClearColor(s_State->clearColor.r,
-                s_State->clearColor.g,
-                s_State->clearColor.b,
-                s_State->clearColor.a);
+   glClearColor(s_RendererState->clearColor.r,
+                s_RendererState->clearColor.g,
+                s_RendererState->clearColor.b,
+                s_RendererState->clearColor.a);
    glClear(GL_COLOR_BUFFER_BIT);
 
    glm::mat4 projectionMat = glm::ortho(0.0f,
@@ -143,10 +143,12 @@ Renderer::EndScene()
                                         (float)ApplicationWindow::GetHeight(),
                                         -1.0f,
                                         1.0f);
-   _ = s_State->shaderProgram.SetUniformMat4("u_Projection", projectionMat);
+   _ = s_RendererState->shaderProgram.SetUniformMat4("u_Projection",
+                                                     projectionMat);
 
-   _ = s_State->vertexBuffer.BindAndUploadData(s_State->vertices);
-   _ = s_State->shaderProgram.Use();
+   _ = s_RendererState->vertexBuffer.BindAndUploadData(
+       s_RendererState->vertices);
+   _ = s_RendererState->shaderProgram.Use();
    glDrawElements(GL_TRIANGLES, MAX_INDICES, GL_UNSIGNED_INT, nullptr);
 
    Flush();
@@ -157,44 +159,44 @@ Renderer::EndScene()
 std::vector<Vertex>
 Renderer::GetVertices()
 {
-   return s_State->vertices;
+   return s_RendererState->vertices;
 }
 
 glm::vec4
 Renderer::GetClearColor()
 {
-   return s_State->clearColor;
+   return s_RendererState->clearColor;
 }
 
 void
 Renderer::SetClearColor(const glm::vec4 &color)
 {
-   s_State->clearColor = color;
+   s_RendererState->clearColor = color;
 }
 
 void
 Renderer::Flush()
 {
-   s_State->hasBegunScene = false;
-   s_State->vertices.clear();
+   s_RendererState->hasBegunScene = false;
+   s_RendererState->vertices.clear();
 
-   s_State->vertexArray.Flush();
-   s_State->vertexBuffer.Flush();
+   s_RendererState->vertexArray.Flush();
+   s_RendererState->vertexBuffer.Flush();
 }
 
 void
 Renderer::DrawVertices(const std::vector<Vertex> &vertices)
 {
-   auto newSize = s_State->vertices.size() + vertices.size();
+   auto newSize = s_RendererState->vertices.size() + vertices.size();
    if (newSize > MAX_VERTICES)
    {
       std::cerr << "Too many vertices" << std::endl;
       return;
    }
 
-   s_State->vertices.insert(s_State->vertices.end(),
-                            vertices.begin(),
-                            vertices.end());
+   s_RendererState->vertices.insert(s_RendererState->vertices.end(),
+                                    vertices.begin(),
+                                    vertices.end());
 }
 
 void
@@ -208,7 +210,7 @@ Renderer::PrintVertices()
    printf("x\ty\tz\tr\tg\tb\ta\n");
    printf("%s\n", std::string(shellColumns, '-').c_str());
 
-   for (const auto &vertex : s_State->vertices)
+   for (const auto &vertex : s_RendererState->vertices)
    {
       printf("%f\t%f\t%f\t%f\t%f\t%f\t%f\n",
              vertex.position.x,
