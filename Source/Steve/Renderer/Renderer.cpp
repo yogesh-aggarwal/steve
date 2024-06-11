@@ -8,7 +8,7 @@
 #include <Steve/Core/Helpers.hpp>
 #include <Steve/Application/ApplicationWindow.hpp>
 
-Ref<Renderer::State> state = nullptr;
+Ref<Renderer::State> s_State = nullptr;
 
 bool
 Renderer::HasInitialized()
@@ -75,12 +75,15 @@ Renderer::Initialize()
       .hasInitialized = true,
       .hasBegunScene  = false,
       .vertices       = std::vector<Vertex>(MAX_VERTICES),
-      .vertexArray    = vao,
-      .vertexBuffer   = vbo,
-      .indexBuffer    = ibo,
-      .shaderProgram  = shaderProgram.value,
+
+      .clearColor = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),   // black
+
+      .vertexArray   = vao,
+      .vertexBuffer  = vbo,
+      .indexBuffer   = ibo,
+      .shaderProgram = shaderProgram.value,
    };
-   state = CreateRef<State>(m_State);
+   s_State = CreateRef<State>(m_State);
 
    return true;
 }
@@ -88,23 +91,23 @@ Renderer::Initialize()
 Result<bool>
 Renderer::BeginScene()
 {
-   if (!state->hasInitialized)
+   if (!s_State->hasInitialized)
    {
       return { false,
                new Error({ STEVE_RENDERER_NOT_INITIALIZED,
                            "Renderer not initialized" }) };
    }
-   if (state->hasBegunScene)
+   if (s_State->hasBegunScene)
    {
       return { false,
                new Error({ STEVE_RENDERER_SCENE_ALREADY_BEGUN,
                            "Renderer scene already begun" }) };
    }
 
-   state->hasBegunScene = true;
-   state->vertices.clear();
+   s_State->hasBegunScene = true;
+   s_State->vertices.clear();
 
-   auto _ = state->shaderProgram.Use();
+   auto _ = s_State->shaderProgram.Use();
 
    return true;
 }
@@ -112,21 +115,27 @@ Renderer::BeginScene()
 Result<bool>
 Renderer::EndScene()
 {
-   if (!state->hasInitialized)
+   if (!s_State->hasInitialized)
    {
       return { false,
                new Error({ STEVE_RENDERER_NOT_INITIALIZED,
                            "Renderer not initialized" }) };
    }
-   if (!state->hasBegunScene)
+   if (!s_State->hasBegunScene)
    {
       return { false,
                new Error({ STEVE_RENDERER_SCENE_HAS_NOT_BEGUN,
                            "Renderer scene has not begun" }) };
    }
-   if (state->vertices.empty()) { return true; }
+   if (s_State->vertices.empty()) { return true; }
 
    auto _ = Result<bool> { false };
+
+   glClearColor(s_State->clearColor.r,
+                s_State->clearColor.g,
+                s_State->clearColor.b,
+                s_State->clearColor.a);
+   glClear(GL_COLOR_BUFFER_BIT);
 
    glm::mat4 projectionMat = glm::ortho(0.0f,
                                         (float)ApplicationWindow::GetWidth(),
@@ -134,10 +143,10 @@ Renderer::EndScene()
                                         (float)ApplicationWindow::GetHeight(),
                                         -1.0f,
                                         1.0f);
-   _ = state->shaderProgram.SetUniformMat4("u_Projection", projectionMat);
+   _ = s_State->shaderProgram.SetUniformMat4("u_Projection", projectionMat);
 
-   _ = state->vertexBuffer.BindAndUploadData(state->vertices);
-   _ = state->shaderProgram.Use();
+   _ = s_State->vertexBuffer.BindAndUploadData(s_State->vertices);
+   _ = s_State->shaderProgram.Use();
    glDrawElements(GL_TRIANGLES, MAX_INDICES, GL_UNSIGNED_INT, nullptr);
 
    Flush();
@@ -148,32 +157,44 @@ Renderer::EndScene()
 std::vector<Vertex>
 Renderer::GetVertices()
 {
-   return state->vertices;
+   return s_State->vertices;
+}
+
+glm::vec4
+Renderer::GetClearColor()
+{
+   return s_State->clearColor;
+}
+
+void
+Renderer::SetClearColor(const glm::vec4 &color)
+{
+   s_State->clearColor = color;
 }
 
 void
 Renderer::Flush()
 {
-   state->hasBegunScene = false;
-   state->vertices.clear();
+   s_State->hasBegunScene = false;
+   s_State->vertices.clear();
 
-   state->vertexArray.Flush();
-   state->vertexBuffer.Flush();
+   s_State->vertexArray.Flush();
+   s_State->vertexBuffer.Flush();
 }
 
 void
 Renderer::DrawVertices(const std::vector<Vertex> &vertices)
 {
-   auto newSize = state->vertices.size() + vertices.size();
+   auto newSize = s_State->vertices.size() + vertices.size();
    if (newSize > MAX_VERTICES)
    {
       std::cerr << "Too many vertices" << std::endl;
       return;
    }
 
-   state->vertices.insert(state->vertices.end(),
-                          vertices.begin(),
-                          vertices.end());
+   s_State->vertices.insert(s_State->vertices.end(),
+                            vertices.begin(),
+                            vertices.end());
 }
 
 void
@@ -181,22 +202,22 @@ Renderer::PrintVertices()
 {
    system("clear");
 
-   std::cout
-       << "-------------------------------------------------------------------"
-       << std::endl;
-   std::cout << "x" << "\t" << "y" << "\t" << "z" << "\t" << "r" << "\t" << "g"
-             << "\t" << "b" << "\t" << "a" << std::endl;
-   std::cout
-       << "-------------------------------------------------------------------"
-       << std::endl;
-   for (const auto &vertex : state->vertices)
+   const int shellColumns = 80;
+
+   printf("%s\n", std::string(shellColumns, '-').c_str());
+   printf("x\ty\tz\tr\tg\tb\ta\n");
+   printf("%s\n", std::string(shellColumns, '-').c_str());
+
+   for (const auto &vertex : s_State->vertices)
    {
-      std::cout << vertex.position.x << "\t" << vertex.position.y << "\t"
-                << vertex.position.z << "\t" << vertex.color.r << "\t"
-                << vertex.color.g << "\t" << vertex.color.b << "\t"
-                << vertex.color.a << std::endl;
+      printf("%f\t%f\t%f\t%f\t%f\t%f\t%f\n",
+             vertex.position.x,
+             vertex.position.y,
+             vertex.position.z,
+             vertex.color.r,
+             vertex.color.g,
+             vertex.color.b,
+             vertex.color.a);
    }
-   std::cout
-       << "-------------------------------------------------------------------"
-       << std::endl;
+   printf("%s\n", std::string(shellColumns, '-').c_str());
 }

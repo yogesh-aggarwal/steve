@@ -18,6 +18,8 @@ namespace Renderer
       bool                hasBegunScene;
       std::vector<Vertex> vertices;
 
+      glm::vec4 clearColor;
+
       VertexArray   vertexArray;
       VertexBuffer  vertexBuffer;
       IndexBuffer   indexBuffer;
@@ -38,6 +40,12 @@ namespace Renderer
 
    std::vector<Vertex>
    GetVertices();
+
+   glm::vec4
+   GetClearColor();
+
+   void
+   SetClearColor(const glm::vec4 &color);
 
    void
    Flush();

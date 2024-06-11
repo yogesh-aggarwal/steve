@@ -104,9 +104,6 @@ ApplicationWindow::Run()
       int glError = glGetError();
       if (glError) std::cout << glError << std::endl;
 
-      glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-      glClear(GL_COLOR_BUFFER_BIT);
-
       s_State.LifeCyclePtr->OnRender();
 
       glfwSwapBuffers(s_State.Window);
