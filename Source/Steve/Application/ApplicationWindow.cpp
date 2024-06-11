@@ -127,15 +127,17 @@ ApplicationWindow::IsRunning()
 void
 ApplicationWindow::Terminate()
 {
-   s_State.LifeCyclePtr->OnTerminate();
+   if (!s_State.Window) return;
 
-   glfwTerminate();
+   s_State.LifeCyclePtr->OnTerminate();
 
    s_State.Window       = nullptr;
    s_State.IsRunning    = false;
    s_State.LifeCyclePtr = nullptr;
 
    glfwSetWindowShouldClose(s_State.Window, true);
+
+   glfwTerminate();
 }
 
 int

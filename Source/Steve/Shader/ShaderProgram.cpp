@@ -60,7 +60,7 @@ ShaderProgram::FromSource(const std::string &vertexSource,
    auto vertexShader = Shader::FromSource(Shader::Type::Vertex, vertexSource);
    res = vertexShader.Allocate().WithErrorHandler([](Ref<Error> error) {
       error->Push({ STEVE_SHADER_PROGRAM_INITIALIZE_FAILED,
-                    "Failed to initialize shader program from shader files." });
+                    "Failed to initialize shader program from sources." });
    });
    if (!res) return { {}, res.error };
 
@@ -69,7 +69,7 @@ ShaderProgram::FromSource(const std::string &vertexSource,
        Shader::FromSource(Shader::Type::Fragment, fragmentSource);
    res = fragmentShader.Allocate().WithErrorHandler([](Ref<Error> error) {
       error->Push({ STEVE_SHADER_PROGRAM_INITIALIZE_FAILED,
-                    "Failed to initialize shader program from shader files." });
+                    "Failed to initialize shader program from sources." });
    });
    if (!res) return { {}, res.error };
 
@@ -87,12 +87,12 @@ ShaderProgram::FromFiles(std::string vertexPath, std::string fragmentPath)
            .WithErrorHandler([](Ref<Error> error) {
               error->Push(
                   { STEVE_SHADER_PROGRAM_INITIALIZE_FAILED,
-                    "Failed to initialize shader program from shader files." });
+                    "Failed to initialize shader program from files." });
            });
    if (!vertexShader) return { {}, vertexShader.error };
    res = vertexShader.value.Allocate().WithErrorHandler([](Ref<Error> error) {
       error->Push({ STEVE_SHADER_PROGRAM_INITIALIZE_FAILED,
-                    "Failed to initialize shader program from shader files." });
+                    "Failed to initialize shader program from  files." });
    });
    if (!res) return { {}, res.error };
 
