@@ -19,6 +19,13 @@ ApplicationWindow::Initialize(Configuration config)
 
       s_State.IsRunning = false;
       s_State.Window    = nullptr;
+
+      if (!s_State.LifeCyclePtr)
+      {
+         return { false,
+                  new Error({ STEVE_APPLICATION_WINDOW_LIFECYCLE_NOT_PROVIDED,
+                              "Application window lifecycle not provided" }) };
+      }
    }
 
    /* Initialize GLFW and OpenGL */
