@@ -30,6 +30,8 @@ class Application : public ApplicationWindow::LifeCycle
       }
    }
 
+   float position = 0.0f;
+
    void
    OnRender() override
    {
@@ -49,10 +51,11 @@ class Application : public ApplicationWindow::LifeCycle
       // Draw a quad
       {
          std::array<Vertex, 4> q =
-             Steve::Draw::DrawQuad(0.0f, 0.0f, 1920.0f, 40.0f, glm::vec4(0.0f));
-         Renderer::DrawVertices({ q.begin(), q.end() });
-
-         q = Steve::Draw::DrawQuad(1.0f, 1.0f, 1918.0f, 38.0f, glm::vec4(1.0f));
+             Steve::Draw::DrawQuad(0.0f,
+                                   0.0f,
+                                   ApplicationWindow::GetWidth(),
+                                   30.0f,
+                                   glm::vec4(1.0f));
          Renderer::DrawVertices({ q.begin(), q.end() });
       }
 

@@ -139,8 +139,8 @@ Renderer::EndScene()
 
    glm::mat4 projectionMat = glm::ortho(0.0f,
                                         (float)ApplicationWindow::GetWidth(),
-                                        0.0f,
                                         (float)ApplicationWindow::GetHeight(),
+                                        0.0f,
                                         -1.0f,
                                         1.0f);
    _ = s_RendererState->shaderProgram.SetUniformMat4("u_Projection",
@@ -148,6 +148,7 @@ Renderer::EndScene()
 
    _ = s_RendererState->vertexBuffer.BindAndUploadData(
        s_RendererState->vertices);
+
    _ = s_RendererState->shaderProgram.Use();
    glDrawElements(GL_TRIANGLES, MAX_INDICES, GL_UNSIGNED_INT, nullptr);
 
@@ -204,10 +205,10 @@ Renderer::PrintVertices()
 {
    system("clear");
 
-   const int shellColumns = 80;
+   const int shellColumns = 110;
 
    printf("%s\n", std::string(shellColumns, '-').c_str());
-   printf("x\ty\tz\tr\tg\tb\ta\n");
+   printf("x\t\ty\t\tz\t\tr\t\tg\t\tb\t\ta\n");
    printf("%s\n", std::string(shellColumns, '-').c_str());
 
    for (const auto &vertex : s_RendererState->vertices)
