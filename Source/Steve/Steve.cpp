@@ -14,9 +14,15 @@ Application::OnInit()
    }
 }
 
+// int width = ApplicationWindow::GetWidth();
+
 void
 Application::OnRender()
 {
+   // if (width == ApplicationWindow::GetWidth()) return;
+   // std::cout << "Render\n";
+   // width = ApplicationWindow::GetWidth();
+
    auto _ = Result<bool> { false };
 
    // Begin scene
