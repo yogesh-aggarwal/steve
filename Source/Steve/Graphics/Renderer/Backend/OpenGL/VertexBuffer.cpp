@@ -38,6 +38,9 @@ VertexBuffer::BindAndUploadData(const std::vector<Vertex> &data)
    }
 
    glBindBuffer(GL_ARRAY_BUFFER, m_ID);
+
+   // DGLERROR;
+
    glBufferSubData(GL_ARRAY_BUFFER,
                    0,
                    data.size() * sizeof(Vertex),

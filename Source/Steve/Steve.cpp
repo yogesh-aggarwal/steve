@@ -42,7 +42,7 @@ Application::OnRender()
 
       q = Steve::Draw::DrawQuad(4.0f,
                                 4.0f,
-                                ApplicationWindow::GetWidth() / 2 - 4.0f,
+                                32.0f,
                                 32.0f,
                                 glm::vec4(0.3f, 0.3f, 0.3f, 1.0f));
       Renderer::DrawVertices({ q.begin(), q.end() });
@@ -53,6 +53,11 @@ Application::OnRender()
       error->Push({ STEVE_APPLICATION_RENDER_FAILED,
                     "Failed to end rendering scene." });
    });
+   if (!_)
+   {
+      _.error->Print();
+      return;
+   }
 }
 
 Result<bool>
@@ -65,6 +70,8 @@ Steve::Run()
       .Width        = 800,
       .Height       = 600,
       .LifeCyclePtr = new Application(),
+
+      .IsVSync = false,
    };
 
    _ = ApplicationWindow::Initialize(config).WithErrorHandler(

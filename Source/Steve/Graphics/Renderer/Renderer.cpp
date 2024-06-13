@@ -143,13 +143,18 @@ Renderer::EndScene()
                                         0.0f,
                                         -1.0f,
                                         1.0f);
+
    _ = s_RendererState->shaderProgram.SetUniformMat4("u_Projection",
                                                      projectionMat);
+   if (!_) return { false, _.error };
 
    _ = s_RendererState->vertexBuffer.BindAndUploadData(
        s_RendererState->vertices);
+   if (!_) return { false, _.error };
 
    _ = s_RendererState->shaderProgram.Use();
+   if (!_) return { false, _.error };
+
    glDrawElements(GL_TRIANGLES, MAX_INDICES, GL_UNSIGNED_INT, nullptr);
 
    Flush();
@@ -180,9 +185,6 @@ Renderer::Flush()
 {
    s_RendererState->hasBegunScene = false;
    s_RendererState->vertices.clear();
-
-   s_RendererState->vertexArray.Flush();
-   s_RendererState->vertexBuffer.Flush();
 }
 
 void
