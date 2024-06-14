@@ -86,11 +86,10 @@ add_subdirectory("Vendor/glad")
 target_link_libraries(${CMAKE_PROJECT_NAME} glad)
 SUCCESS("Linked library: GLAD")
 
-# # OpenGL
-# find_package(OpenGL REQUIRED)
-# target_link_libraries(${CMAKE_PROJECT_NAME} ${OPENGL_LIBRARIES})
-# message("PE" ${OPENGL_LIBRARIES})
-# SUCCESS("Linked library: OpenGL")
+# nanoid_cpp Library
+add_subdirectory("Vendor/nanoid_cpp")
+target_link_libraries(${CMAKE_PROJECT_NAME} nanoid)
+include_directories("Vendor/nanoid_cpp/inc")
 
 message("[(---- Done Linking Libraries ----)]\n")
 
