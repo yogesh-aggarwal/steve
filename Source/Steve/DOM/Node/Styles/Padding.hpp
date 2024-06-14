@@ -2,7 +2,7 @@
 
 #include "EdgeStyle.tcc"
 
-namespace Steve::DOM::StylesSpec
+namespace Steve::DOM::StylingSpec
 {
    class Padding : public EdgeStyle<float>
    {

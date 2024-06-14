@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Steve::DOM::StylesSpec
+namespace Steve::DOM::StylingSpec
 {
    template<typename T>
    class EdgeStyle

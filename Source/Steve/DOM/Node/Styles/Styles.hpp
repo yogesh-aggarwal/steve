@@ -8,8 +8,8 @@ namespace Steve::DOM
    class Styles
    {
    private:
-      StylesSpec::Margin  m_Margin;
-      StylesSpec::Padding m_Padding;
+      StylingSpec::Margin  m_Margin;
+      StylingSpec::Padding m_Padding;
 
    public:
       Styles()  = default;
@@ -28,26 +28,26 @@ namespace Steve::DOM
          return !(*this == other);
       }
 
-      inline StylesSpec::Margin
+      inline StylingSpec::Margin
       GetMargin()
       {
          return m_Margin;
       }
 
       inline void
-      SetMargin(StylesSpec::Margin margin)
+      SetMargin(StylingSpec::Margin margin)
       {
          m_Margin = margin;
       }
 
-      inline StylesSpec::Padding
+      inline StylingSpec::Padding
       GetPadding()
       {
          return m_Padding;
       }
 
       inline void
-      SetPadding(StylesSpec::Padding padding)
+      SetPadding(StylingSpec::Padding padding)
       {
          m_Padding = padding;
       }

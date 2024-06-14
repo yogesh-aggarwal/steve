@@ -12,9 +12,9 @@ namespace Steve::DOM
     *
     * @details
     * The class contain various functionality to read, modify & work with
-    * styles & make up a rich support rather than plain `std::map` or something
-    * similar which will also slow down the performance down the road as far
-    * rendering is concerned.
+    * styles & make up a rich support rather than using plain `std::map` or
+    * something similar which will slows down the performance also down the road
+    * as far rendering is concerned.
     */
    class StyledNode : public Node
    {
@@ -45,7 +45,7 @@ namespace Steve::DOM
       WithStyles(const Styles &styles);
 
       /**
-       * Helper function to override existing styleing with the new one.
+       * Helper function to override existing styling with the new one.
        *
        * @param styles Stylings that are to be copied over to the node.
        */
