@@ -3,6 +3,14 @@
 #include <string>
 #include <fstream>
 
+#include <nanoid/nanoid.h>
+
+std::string
+Utility::GenerateNanoID(int length, std::string dictionary)
+{
+   return nanoid::generate(dictionary, length);
+}
+
 Result<std::string>
 Utility::ReadFile(const std::string &path)
 {
