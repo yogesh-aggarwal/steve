@@ -1,5 +1,7 @@
 #include "Steve.hpp"
 
+#include <Steve/DOM/Container/Container.hpp>
+
 void
 Application::OnInit()
 {
@@ -38,6 +40,8 @@ Application::OnRender()
 
    // Draw a quad
    {
+      Steve::DOM::StyledNode c {};
+
       std::array<Vertex, 4> q =
           Steve::Draw::DrawQuad(0.0f,
                                 0.0f,

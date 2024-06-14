@@ -64,6 +64,8 @@ namespace Steve::DOM
    public:
       Node();
 
+      Node(const Node &other);
+
       static Node
       WithProperties(const Properties &properties);
 

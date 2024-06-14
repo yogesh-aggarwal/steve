@@ -4,6 +4,13 @@ Steve::DOM::Node::Node() : m_Properties({}), m_Parent(nullptr), m_Children({})
 {
 }
 
+Steve::DOM::Node::Node(const Node &other)
+{
+   m_Properties = other.m_Properties;
+   m_Parent     = other.m_Parent;
+   m_Children   = other.m_Children;
+}
+
 Steve::DOM::Node
 Steve::DOM::Node::WithProperties(const Properties &properties)
 {
