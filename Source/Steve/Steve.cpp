@@ -56,6 +56,13 @@ Application::OnRender()
                                 32.0f,
                                 glm::vec4(0.3f, 0.3f, 0.3f, 1.0f));
       Renderer::DrawVertices({ q.begin(), q.end() });
+
+      q = Steve::Draw::DrawQuad(ApplicationWindow::GetWidth() * 0.1f,
+                                4.0f,
+                                ApplicationWindow::GetWidth() * 0.8f,
+                                32.0f,
+                                glm::vec4(0.3f, 0.3f, 0.3f, 1.0f));
+      Renderer::DrawVertices({ q.begin(), q.end() });
    }
 
    // End scene
