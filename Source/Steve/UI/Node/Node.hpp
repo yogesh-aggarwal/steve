@@ -4,6 +4,7 @@
 
 #include <Steve/Core/Helpers.hpp>
 
+#include "Styles/Bound.hpp"
 #include "Styles/Styles.hpp"
 
 namespace Steve::UI
@@ -99,8 +100,114 @@ namespace Steve::UI
          }
       };
 
+      class PaintBounds
+      {
+      private:
+         StylingSpec::Bound m_VerticalBound;
+         StylingSpec::Bound m_HorizontalBound;
+
+      public:
+         inline PaintBounds() : m_VerticalBound(0.0f), m_HorizontalBound(0.0f)
+         {
+         }
+
+         inline PaintBounds(const StylingSpec::Bound &verticalBound,
+                            const StylingSpec::Bound &horizontalBound)
+             : m_VerticalBound(verticalBound),
+               m_HorizontalBound(horizontalBound)
+         {
+         }
+
+         inline PaintBounds(const PaintBounds &other)
+             : m_VerticalBound(other.m_VerticalBound),
+               m_HorizontalBound(other.m_HorizontalBound)
+         {
+         }
+
+         inline PaintBounds &
+         operator=(const PaintBounds &other)
+         {
+            m_VerticalBound   = other.m_VerticalBound;
+            m_HorizontalBound = other.m_HorizontalBound;
+
+            return *this;
+         }
+
+         inline bool
+         operator==(const PaintBounds &other) const
+         {
+            return m_VerticalBound == other.m_VerticalBound &&
+                   m_HorizontalBound == other.m_HorizontalBound;
+         }
+
+         inline bool
+         operator!=(const PaintBounds &other) const
+         {
+            return !(*this == other);
+         }
+
+         inline StylingSpec::Bound
+         GetVerticalBound() const
+         {
+            return m_VerticalBound;
+         }
+
+         inline StylingSpec::Bound
+         GetHorizontalBound() const
+         {
+            return m_HorizontalBound;
+         }
+
+         inline void
+         SetVerticalBound(const StylingSpec::Bound &bound)
+         {
+            m_VerticalBound = bound;
+         }
+
+         inline void
+         SetHorizontalBound(const StylingSpec::Bound &bound)
+         {
+            m_HorizontalBound = bound;
+         }
+
+         inline void
+         SetBounds(const StylingSpec::Bound &verticalBound,
+                   const StylingSpec::Bound &horizontalBound)
+         {
+            m_VerticalBound   = verticalBound;
+            m_HorizontalBound = horizontalBound;
+         }
+
+         inline void
+         SetBounds(const PaintBounds &bounds)
+         {
+            m_VerticalBound   = bounds.m_VerticalBound;
+            m_HorizontalBound = bounds.m_HorizontalBound;
+         }
+
+         inline void
+         Reset()
+         {
+            m_VerticalBound   = 0.0f;
+            m_HorizontalBound = 0.0f;
+         }
+
+         inline void
+         ResetVerticalBound()
+         {
+            m_VerticalBound = 0.0f;
+         }
+
+         inline void
+         ResetHorizontalBound()
+         {
+            m_HorizontalBound = 0.0f;
+         }
+      };
+
    protected:
-      Properties m_Properties;
+      Properties  m_Properties;
+      PaintBounds m_PaintBounds;
 
       InternalID             m_InternalID;
       Ref<Node>              m_Parent;
@@ -130,6 +237,12 @@ namespace Steve::UI
       GetInternalID() const
       {
          return m_InternalID;
+      }
+
+      inline PaintBounds
+      GetPaintBounds() const
+      {
+         return m_PaintBounds;
       }
 
       bool
@@ -173,5 +286,8 @@ namespace Steve::UI
 
       void
       RemoveChildByInternalID(const InternalID &id);
+
+      void
+      CalculateBounds();
    };
 }

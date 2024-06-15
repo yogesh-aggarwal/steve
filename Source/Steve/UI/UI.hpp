@@ -7,5 +7,5 @@
 namespace Steve::UI
 {
    std::vector<std::array<Vertex, 4>>
-   TranslateToQuads(const StyledNode &node);
+   TranslateToQuads(StyledNode node);
 }

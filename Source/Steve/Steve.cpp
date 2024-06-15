@@ -42,7 +42,8 @@ Application::OnRender()
    // Draw a quad
    {
       Steve::UI::Styles styles {};
-      styles.SetWidth(4.0f);
+      styles.SetWidth(32.0f);
+      styles.SetHeight(32.0f);
 
       Steve::UI::Container c {};
 

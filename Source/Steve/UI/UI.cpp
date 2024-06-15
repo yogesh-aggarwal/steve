@@ -11,7 +11,9 @@ const auto DEFAULT_QUADS = {
 };
 
 std::vector<std::array<Vertex, 4>>
-Steve::UI::TranslateToQuads(const StyledNode &node)
+Steve::UI::TranslateToQuads(StyledNode node)
 {
+   node.CalculateBounds();
+
    return DEFAULT_QUADS;
 }

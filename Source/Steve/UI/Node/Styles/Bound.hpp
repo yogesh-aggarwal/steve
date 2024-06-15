@@ -20,6 +20,16 @@ namespace Steve::UI::StylingSpec
       ~Bound()                  = default;
       Bound(const Bound &other) = default;
 
+      inline Bound &
+      operator=(const Bound &other)
+      {
+         m_Min   = other.m_Min;
+         m_Max   = other.m_Max;
+         m_Value = other.m_Value;
+
+         return *this;
+      }
+
       inline bool
       operator==(const Bound &other) const
       {

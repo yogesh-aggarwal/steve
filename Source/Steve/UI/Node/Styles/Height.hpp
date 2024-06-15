@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Bound.tcc"
+#include "Bound.hpp"
 
 namespace Steve::UI::StylingSpec
 {

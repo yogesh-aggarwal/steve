@@ -1,15 +1,20 @@
 #include "Node.hpp"
 
+#include <Steve/Application/ApplicationWindow.hpp>
+
 Steve::UI::Node::Node()
-    : m_InternalID(), m_Properties({}), m_Parent(nullptr), m_Children({})
+    : m_InternalID(), m_Properties({}),
+      m_PaintBounds(
+          { m_Properties.styles.GetWidth(), m_Properties.styles.GetHeight() }),
+      m_Parent(nullptr), m_Children({})
 {
 }
 
 Steve::UI::Node::Node(const Node &other)
+    : m_InternalID(other.m_InternalID), m_Properties(other.m_Properties),
+      m_Parent(other.m_Parent), m_Children(other.m_Children),
+      m_PaintBounds(other.m_PaintBounds)
 {
-   m_Properties = other.m_Properties;
-   m_Parent     = other.m_Parent;
-   m_Children   = other.m_Children;
 }
 
 Steve::UI::Node
@@ -103,4 +108,52 @@ Steve::UI::Node::RemoveChildByInternalID(const InternalID &id)
          break;
       }
    }
+}
+
+void
+Steve::UI::Node::CalculateBounds()
+{
+   /* If the parent is null, then the bounds are the window bounds (for now) */
+   if (!m_Parent)
+   {
+      m_PaintBounds.GetHorizontalBound().Set(
+          (float)ApplicationWindow::GetWidth());
+      m_PaintBounds.GetVerticalBound().Set(
+          (float)ApplicationWindow::GetHeight());
+
+      /* Horizontal bounds */
+      if (!m_PaintBounds.GetHorizontalBound().IsMaxBoundDefined()) {}
+
+      /* Vertical bounds */
+      if (!m_PaintBounds.GetVerticalBound().IsMaxBoundDefined()) {}
+
+      return;
+   }
+
+   /* Prepare paint bound */
+   {
+      auto parentPaintBounds     = m_Parent->GetPaintBounds();
+      auto parentHorizontalBound = parentPaintBounds.GetHorizontalBound();
+      auto parentVerticalBound   = parentPaintBounds.GetVerticalBound();
+      auto paintHorizontalBound  = m_PaintBounds.GetHorizontalBound();
+      auto paintVerticalBound    = m_PaintBounds.GetVerticalBound();
+      auto definedWidth          = m_Properties.styles.GetWidth();
+      auto definedHeight         = m_Properties.styles.GetHeight();
+
+      /* Horizontal bounds */
+      if (parentHorizontalBound.GetMax() > paintHorizontalBound.GetMax())
+         paintHorizontalBound.SetMax(parentHorizontalBound.GetMax());
+      else if (definedWidth.GetMin() > paintHorizontalBound.GetMin())
+         paintHorizontalBound.SetMin(definedWidth.GetMin());
+
+      /* Vertical bounds */
+      if (parentVerticalBound.GetMax() > paintVerticalBound.GetMax())
+         paintVerticalBound.SetMax(parentVerticalBound.GetMax());
+      else if (definedHeight.GetMin() > paintVerticalBound.GetMin())
+         paintVerticalBound.SetMin(definedHeight.GetMin());
+   }
+
+   /* Make every child re-calculate its bounds */
+   for (const auto &child : m_Children)
+      child->CalculateBounds();
 }
