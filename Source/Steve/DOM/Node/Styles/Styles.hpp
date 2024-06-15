@@ -2,6 +2,8 @@
 
 #include "Margin.hpp"
 #include "Padding.hpp"
+#include "Width.hpp"
+#include "Height.hpp"
 
 namespace Steve::DOM
 {
@@ -10,6 +12,8 @@ namespace Steve::DOM
    private:
       StylingSpec::Margin  m_Margin;
       StylingSpec::Padding m_Padding;
+      StylingSpec::Width   m_Width;
+      StylingSpec::Height  m_Height;
 
    public:
       Styles()  = default;
@@ -50,6 +54,30 @@ namespace Steve::DOM
       SetPadding(StylingSpec::Padding padding)
       {
          m_Padding = padding;
+      }
+
+      inline StylingSpec::Width
+      GetWidth()
+      {
+         return m_Width;
+      }
+
+      inline void
+      SetWidth(StylingSpec::Width width)
+      {
+         m_Width = width;
+      }
+
+      inline StylingSpec::Height
+      GetHeight()
+      {
+         return m_Height;
+      }
+
+      inline void
+      SetHeight(StylingSpec::Height height)
+      {
+         m_Height = height;
       }
    };
 }

@@ -40,13 +40,17 @@ Application::OnRender()
 
    // Draw a quad
    {
-      Steve::DOM::StyledNode c {};
-      c.PushChild(Steve::DOM::StyledNode::FromNode(
-          Steve::DOM::Node::WithProperties({})));
-      c.PushChild(Steve::DOM::StyledNode::FromNode(
-          Steve::DOM::Node::WithProperties({})));
+      Steve::DOM::Styles styles {};
+      styles.SetWidth(4.0f);
 
-      std::cout << c.GetChildrenCount() << std::endl;
+      Steve::DOM::StyledNode c {};
+
+      for (int i = 0; i < 10; i++)
+      {
+         Steve::DOM::StyledNode n {};
+         n.UpdateStyles(styles);
+         c.PushChild(n);
+      }
 
       std::array<Vertex, 4> q =
           Steve::Draw::DrawQuad(0.0f,
