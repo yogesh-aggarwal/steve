@@ -82,4 +82,7 @@ public:
 private:
    static void
    HandleInputs();
+
+   static Pair<float, float>
+   GetDisplayDimensions();
 };

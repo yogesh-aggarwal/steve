@@ -35,6 +35,7 @@ ApplicationWindow::Initialize(Configuration config)
       glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
       glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
       glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
+      glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
 #ifdef __APPLE__
       glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);   // MacOS only
 #endif
@@ -53,6 +54,11 @@ ApplicationWindow::Initialize(Configuration config)
                new Error({ STEVE_APPLICATION_WINDOW_CREATION_FAILED,
                            "Failed to create application window" }) };
    }
+
+   auto [displayWidth, displayHeight] = GetDisplayDimensions();
+   glfwSetWindowPos(s_ApplicationWindowState.Window,
+                    displayWidth / 2 - s_ApplicationWindowState.Width / 2,
+                    displayHeight / 2 - s_ApplicationWindowState.Height / 2);
 
    glfwSwapInterval(s_ApplicationWindowState.IsVSync);
    glfwMakeContextCurrent(s_ApplicationWindowState.Window);
@@ -102,6 +108,8 @@ ApplicationWindow::Run()
    {
       HandleInputs();
 
+      if (!s_ApplicationWindowState.IsRunning) break;
+
       // Render commands here
       int glError = glGetError();
       if (glError) std::cout << glError << std::endl;
@@ -130,13 +138,13 @@ ApplicationWindow::Terminate()
 
    s_ApplicationWindowState.LifeCyclePtr->OnTerminate();
 
-   s_ApplicationWindowState.Window       = nullptr;
-   s_ApplicationWindowState.IsRunning    = false;
-   s_ApplicationWindowState.LifeCyclePtr = nullptr;
+   glfwDestroyWindow(s_ApplicationWindowState.Window);
 
    glfwTerminate();
 
-   glfwSetWindowShouldClose(s_ApplicationWindowState.Window, true);
+   s_ApplicationWindowState.Window       = nullptr;
+   s_ApplicationWindowState.IsRunning    = false;
+   s_ApplicationWindowState.LifeCyclePtr = nullptr;
 }
 
 int
@@ -164,10 +172,17 @@ ApplicationWindow::RefreshVSyncEnableState()
    glfwSwapInterval(s_ApplicationWindowState.IsVSync);
 }
 
+Pair<float, float>
+ApplicationWindow::GetDisplayDimensions()
+{
+   const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+   return { static_cast<float>(mode->width), static_cast<float>(mode->height) };
+}
+
 void
 ApplicationWindow::HandleInputs()
 {
-   if (s_ApplicationWindowState.IsRunning) return;
+   if (!s_ApplicationWindowState.IsRunning) return;
 
    s_ApplicationWindowState.LifeCyclePtr->OnKey(
        glfwGetKey(s_ApplicationWindowState.Window, GLFW_KEY_ESCAPE));
@@ -175,7 +190,7 @@ ApplicationWindow::HandleInputs()
    if (glfwGetKey(s_ApplicationWindowState.Window, GLFW_KEY_ESCAPE) ==
        GLFW_PRESS)
    {
-      glfwSetWindowShouldClose(s_ApplicationWindowState.Window, true);
+      Terminate();
       return;
    }
 }
