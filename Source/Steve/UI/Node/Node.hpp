@@ -146,14 +146,14 @@ namespace Steve::UI
             return !(*this == other);
          }
 
-         inline StylingSpec::Bound
-         GetVerticalBound() const
+         inline StylingSpec::Bound &
+         GetVerticalBound()
          {
             return m_VerticalBound;
          }
 
-         inline StylingSpec::Bound
-         GetHorizontalBound() const
+         inline StylingSpec::Bound &
+         GetHorizontalBound()
          {
             return m_HorizontalBound;
          }

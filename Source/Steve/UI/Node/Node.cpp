@@ -116,16 +116,15 @@ Steve::UI::Node::CalculateBounds()
    /* If the parent is null, then the bounds are the window bounds (for now) */
    if (!m_Parent)
    {
-      m_PaintBounds.GetHorizontalBound().Set(
-          (float)ApplicationWindow::GetWidth());
-      m_PaintBounds.GetVerticalBound().Set(
-          (float)ApplicationWindow::GetHeight());
-
       /* Horizontal bounds */
-      if (!m_PaintBounds.GetHorizontalBound().IsMaxBoundDefined()) {}
+      if (!m_PaintBounds.GetHorizontalBound().IsMaxBoundDefined())
+         m_PaintBounds.GetHorizontalBound().Set(
+             (float)ApplicationWindow::GetWidth());
 
       /* Vertical bounds */
-      if (!m_PaintBounds.GetVerticalBound().IsMaxBoundDefined()) {}
+      if (!m_PaintBounds.GetVerticalBound().IsMaxBoundDefined())
+         m_PaintBounds.GetVerticalBound().Set(
+             (float)ApplicationWindow::GetHeight());
 
       return;
    }
