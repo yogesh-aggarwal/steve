@@ -76,7 +76,7 @@ Renderer::Initialize()
       .hasBegunScene  = false,
       .vertices       = std::vector<Vertex>(MAX_VERTICES),
 
-      .clearColor = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f),   // black
+      .clearColor = glm::vec4(0.12f, 0.12f, 0.12f, 0.12f),   // black
 
       .vertexArray   = vao,
       .vertexBuffer  = vbo,

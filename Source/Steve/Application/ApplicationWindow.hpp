@@ -79,10 +79,10 @@ public:
    static void
    RefreshVSyncEnableState();
 
+   static Pair<float, float>
+   GetDisplayDimensions();
+
 private:
    static void
    HandleInputs();
-
-   static Pair<float, float>
-   GetDisplayDimensions();
 };

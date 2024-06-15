@@ -5,9 +5,9 @@
 const auto DEFAULT_QUADS = {
    Steve::Draw::DrawQuad(4.0f,
                          4.0f,
+                         200.0f,
                          32.0f,
-                         32.0f,
-                         glm::vec4(0.3f, 0.3f, 0.3f, 1.0f)),
+                         glm::vec4(0.23f, 0.23f, 0.23f, 1.0f)),
 };
 
 std::vector<std::array<Vertex, 4>>

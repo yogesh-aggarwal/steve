@@ -78,8 +78,8 @@ Steve::Run()
 
    ApplicationWindow::Configuration config {
       .Title        = "Steve Browser",
-      .Width        = 800,
-      .Height       = 600,
+      .Width        = (uint32_t)(1920.0f * 0.55f),
+      .Height       = (uint32_t)(1080.0f * 0.65f),
       .LifeCyclePtr = new Application(),
 
       .IsVSync = false,
