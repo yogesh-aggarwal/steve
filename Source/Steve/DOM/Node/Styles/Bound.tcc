@@ -84,5 +84,29 @@ namespace Steve::DOM::StylingSpec
          m_Max   = all;
          m_Value = all;
       }
+
+      inline bool
+      IsBound() const
+      {
+         return m_Min != m_Max;
+      }
+
+      inline bool
+      IsMinBoundDefined() const
+      {
+         return m_Min >= 0.0f;
+      }
+
+      inline bool
+      IsMaxBoundDefined() const
+      {
+         return m_Max >= 0.0f;
+      }
+
+      inline bool
+      IsValueBoundDefined() const
+      {
+         return m_Value >= 0.0f;
+      }
    };
 }
