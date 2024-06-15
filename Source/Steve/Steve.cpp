@@ -44,11 +44,11 @@ Application::OnRender()
       Steve::UI::Styles styles {};
       styles.SetWidth(4.0f);
 
-      Steve::UI::StyledNode c {};
+      Steve::UI::Container c {};
 
       for (int i = 0; i < 10; i++)
       {
-         Steve::UI::StyledNode n {};
+         Steve::UI::Container n {};
          n.UpdateStyles(styles);
          c.PushChild(n);
       }
