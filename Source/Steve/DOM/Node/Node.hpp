@@ -11,6 +11,50 @@ namespace Steve::DOM
    class Node
    {
    public:
+      class InternalID
+      {
+      private:
+         std::string m_ID;
+
+      public:
+         InternalID() : m_ID("") {}
+
+         InternalID(const std::string &id) : m_ID(id) {}
+
+         InternalID(const InternalID &other) : m_ID(other.m_ID) {}
+
+         InternalID &
+         operator=(const InternalID &other)
+         {
+            m_ID = other.m_ID;
+            return *this;
+         }
+
+         inline bool
+         operator==(const InternalID &other) const
+         {
+            return m_ID == other.m_ID;
+         }
+
+         inline bool
+         operator!=(const InternalID &other) const
+         {
+            return !(*this == other);
+         }
+
+         inline std::string
+         Get() const
+         {
+            return m_ID;
+         }
+
+         inline void
+         Set(const std::string &id)
+         {
+            m_ID = id;
+         }
+      };
+
       struct Properties
       {
          std::string              id;
@@ -58,6 +102,7 @@ namespace Steve::DOM
    protected:
       Properties m_Properties;
 
+      InternalID             m_InternalID;
       Ref<Node>              m_Parent;
       std::vector<Ref<Node>> m_Children;
 
@@ -74,5 +119,59 @@ namespace Steve::DOM
 
       static Node
       WithChildren(const std::vector<Ref<Node>> &children);
+
+      inline const Properties &
+      GetProperties() const
+      {
+         return m_Properties;
+      }
+
+      inline InternalID
+      GetInternalID() const
+      {
+         return m_InternalID;
+      }
+
+      bool
+      IsChildOf(Ref<Node> node) const;
+
+      bool
+      ContainsChildByInternalID(const InternalID &id) const;
+
+      inline Ref<Node>
+      GetParent() const
+      {
+         return m_Parent;
+      }
+
+      inline std::vector<Ref<Node>>
+      GetChildren() const
+      {
+         return m_Children;
+      }
+
+      inline uint32_t
+      GetChildrenCount() const
+      {
+         return m_Children.size();
+      }
+
+      void
+      PushChild(Ref<Node> node);
+
+      void
+      PushChildren(const std::vector<Ref<Node>> &nodes);
+
+      void
+      PushChild(const Node &node);
+
+      void
+      PushChildren(const std::vector<Node> &nodes);
+
+      void
+      RemoveChildByIndex(uint32_t index);
+
+      void
+      RemoveChildByInternalID(const InternalID &id);
    };
 }

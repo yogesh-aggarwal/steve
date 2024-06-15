@@ -41,6 +41,12 @@ Application::OnRender()
    // Draw a quad
    {
       Steve::DOM::StyledNode c {};
+      c.PushChild(Steve::DOM::StyledNode::FromNode(
+          Steve::DOM::Node::WithProperties({})));
+      c.PushChild(Steve::DOM::StyledNode::FromNode(
+          Steve::DOM::Node::WithProperties({})));
+
+      std::cout << c.GetChildrenCount() << std::endl;
 
       std::array<Vertex, 4> q =
           Steve::Draw::DrawQuad(0.0f,
