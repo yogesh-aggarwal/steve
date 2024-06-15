@@ -5,7 +5,7 @@
 #include "Width.hpp"
 #include "Height.hpp"
 
-namespace Steve::DOM
+namespace Steve::UI
 {
    class Styles
    {

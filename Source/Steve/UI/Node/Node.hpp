@@ -6,7 +6,7 @@
 
 #include "Styles/Styles.hpp"
 
-namespace Steve::DOM
+namespace Steve::UI
 {
    class Node
    {

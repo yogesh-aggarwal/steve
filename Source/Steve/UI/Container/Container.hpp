@@ -2,7 +2,7 @@
 
 #include "../Node/StyledNode.hpp"
 
-namespace Steve::DOM
+namespace Steve::UI
 {
    class Container : public StyledNode
    {

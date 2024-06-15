@@ -1,4 +1,4 @@
-#include "DOM.hpp"
+#include "UI.hpp"
 
 #include <Steve/Graphics/Draw/Draw.hpp>
 
@@ -11,7 +11,7 @@ const auto DEFAULT_QUADS = {
 };
 
 std::vector<std::array<Vertex, 4>>
-Steve::DOM::TranslateToQuads(const StyledNode &node)
+Steve::UI::TranslateToQuads(const StyledNode &node)
 {
    return DEFAULT_QUADS;
 }

@@ -2,7 +2,7 @@
 
 #include "Bound.tcc"
 
-namespace Steve::DOM::StylingSpec
+namespace Steve::UI::StylingSpec
 {
    class Height : public Bound
    {

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Steve::DOM::StylingSpec
+namespace Steve::UI::StylingSpec
 {
    class Bound
    {

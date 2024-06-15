@@ -1,7 +1,7 @@
 #include "Steve.hpp"
 
-#include <Steve/DOM/DOM.hpp>
-#include <Steve/DOM/Container/Container.hpp>
+#include <Steve/UI/UI.hpp>
+#include <Steve/UI/Container/Container.hpp>
 
 void
 Application::OnInit()
@@ -41,19 +41,19 @@ Application::OnRender()
 
    // Draw a quad
    {
-      Steve::DOM::Styles styles {};
+      Steve::UI::Styles styles {};
       styles.SetWidth(4.0f);
 
-      Steve::DOM::StyledNode c {};
+      Steve::UI::StyledNode c {};
 
       for (int i = 0; i < 10; i++)
       {
-         Steve::DOM::StyledNode n {};
+         Steve::UI::StyledNode n {};
          n.UpdateStyles(styles);
          c.PushChild(n);
       }
 
-      auto vertices = Steve::DOM::TranslateToQuads(c);
+      auto vertices = Steve::UI::TranslateToQuads(c);
       for (auto &v : vertices)
          Renderer::DrawVertices({ v.begin(), v.end() });
    }

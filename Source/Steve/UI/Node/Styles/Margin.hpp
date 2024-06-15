@@ -2,7 +2,7 @@
 
 #include "EdgeInset.tcc"
 
-namespace Steve::DOM::StylingSpec
+namespace Steve::UI::StylingSpec
 {
    class Margin : public EdgeInset<float>
    {

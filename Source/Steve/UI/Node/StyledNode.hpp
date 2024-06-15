@@ -2,7 +2,7 @@
 
 #include "Node.hpp"
 
-namespace Steve::DOM
+namespace Steve::UI
 {
    /**
     * @brief
@@ -22,14 +22,14 @@ namespace Steve::DOM
       StyledNode() = default;
 
       /**
-       * Constructor to initialize the DOM node with existing node.
+       * Constructor to initialize the UI node with existing node.
        *
        * @param node Node that is to be copied over to the styled node.
        */
       StyledNode(const Node &node);
 
       /**
-       * Named constructor to initialize the DOM node with existing node.
+       * Named constructor to initialize the UI node with existing node.
        *
        * @param node Node that is to be copied over to the styled node.
        */
@@ -37,7 +37,7 @@ namespace Steve::DOM
       FromNode(const Node &node);
 
       /**
-       * Named constructor to initialize the DOM node with existing stylings.
+       * Named constructor to initialize the UI node with existing stylings.
        *
        * @param styles Stylings that are to be copied over to the node.
        */

@@ -1,6 +1,6 @@
 #include "Container.hpp"
 
-Steve::DOM::Container::Container()
+Steve::UI::Container::Container()
 {
    m_Properties.id      = "Container";
    m_Properties.tagName = "Container";

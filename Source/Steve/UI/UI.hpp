@@ -4,7 +4,7 @@
 
 #include "Node/StyledNode.hpp"
 
-namespace Steve::DOM
+namespace Steve::UI
 {
    std::vector<std::array<Vertex, 4>>
    TranslateToQuads(const StyledNode &node);
