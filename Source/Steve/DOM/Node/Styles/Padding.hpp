@@ -1,15 +1,15 @@
 #pragma once
 
-#include "EdgeStyle.tcc"
+#include "EdgeInset.tcc"
 
 namespace Steve::DOM::StylingSpec
 {
-   class Padding : public EdgeStyle<float>
+   class Padding : public EdgeInset<float>
    {
    public:
-      inline Padding() : EdgeStyle(0.0f) {};
+      inline Padding() : EdgeInset(0.0f) {};
       Padding(float top, float right, float bottom, float left)
-          : EdgeStyle(top, right, bottom, left)
+          : EdgeInset(top, right, bottom, left)
       {
          m_Top    = ClampToZero(top);
          m_Right  = ClampToZero(right);
@@ -17,7 +17,7 @@ namespace Steve::DOM::StylingSpec
          m_Left   = ClampToZero(left);
       }
 
-      inline Padding(float all) : EdgeStyle(all) {}
+      inline Padding(float all) : EdgeInset(all) {}
 
       void
       SetTop(float top) override

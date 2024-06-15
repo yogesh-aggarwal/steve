@@ -3,7 +3,7 @@
 namespace Steve::DOM::StylingSpec
 {
    template<typename T>
-   class EdgeStyle
+   class EdgeInset
    {
    protected:
       T m_Top;
@@ -12,28 +12,28 @@ namespace Steve::DOM::StylingSpec
       T m_Left;
 
    public:
-      inline EdgeStyle(T all)
+      inline EdgeInset(T all)
           : m_Top(all), m_Right(all), m_Bottom(all), m_Left(all)
       {
       }
 
-      inline EdgeStyle(T top, T right, T bottom, T left)
+      inline EdgeInset(T top, T right, T bottom, T left)
           : m_Top(top), m_Right(right), m_Bottom(bottom), m_Left(left)
       {
       }
 
-      ~EdgeStyle()                      = default;
-      EdgeStyle(const EdgeStyle &other) = default;
+      ~EdgeInset()                      = default;
+      EdgeInset(const EdgeInset &other) = default;
 
       inline bool
-      operator==(const EdgeStyle &other) const
+      operator==(const EdgeInset &other) const
       {
          return m_Top == other.m_Top && m_Right == other.m_Right &&
                 m_Bottom == other.m_Bottom && m_Left == other.m_Left;
       }
 
       inline bool
-      operator!=(const EdgeStyle &other) const
+      operator!=(const EdgeInset &other) const
       {
          return !(*this == other);
       }
