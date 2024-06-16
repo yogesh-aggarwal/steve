@@ -222,13 +222,13 @@ namespace Steve::UI
       WithProperties(const Properties &properties);
 
       static Node
-      WithParent(const Ref<Node> &parent);
+      WithParent(Ref<Node> parent);
 
       static Node
       WithChildren(const std::vector<Ref<Node>> &children);
 
-      inline const Properties &
-      GetProperties() const
+      inline Properties &
+      GetProperties()
       {
          return m_Properties;
       }
@@ -255,6 +255,12 @@ namespace Steve::UI
       GetParent() const
       {
          return m_Parent;
+      }
+
+      inline void
+      SetParent(Ref<Node> parent)
+      {
+         m_Parent = parent;
       }
 
       inline std::vector<Ref<Node>>

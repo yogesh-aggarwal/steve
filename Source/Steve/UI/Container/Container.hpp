@@ -10,5 +10,13 @@ namespace Steve::UI
    public:
       Container();
       ~Container() = default;
+
+      inline Container(const StyledNode &node) : StyledNode(node) {}
+
+      static Container
+      FromStyledNode(const StyledNode &node)
+      {
+         return Container(node);
+      }
    };
 }

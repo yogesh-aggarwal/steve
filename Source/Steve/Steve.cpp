@@ -17,8 +17,6 @@ Application::OnInit()
    }
 }
 
-// int width = ApplicationWindow::GetWidth();
-
 void
 Application::OnRender()
 {
@@ -46,17 +44,22 @@ Application::OnRender()
       styles.SetHeight(32.0f);
 
       Steve::UI::Container c {};
+      auto                 cRef = CreateRef<Steve::UI::Container>(c);
 
-      for (int i = 0; i < 10; i++)
+      for (int i = 0; i < 1; i++)
       {
          Steve::UI::Container n {};
+         n.GetProperties().id = "child-" + std::to_string(i);
+         n.SetParent(cRef);
          n.UpdateStyles(styles);
          c.PushChild(n);
       }
 
       auto vertices = Steve::UI::TranslateToQuads(c);
       for (auto &v : vertices)
+      {
          Renderer::DrawVertices({ v.begin(), v.end() });
+      }
    }
 
    // End scene
@@ -69,6 +72,8 @@ Application::OnRender()
       _.error->Print();
       return;
    }
+
+   // ApplicationWindow::Terminate();
 }
 
 Result<bool>
