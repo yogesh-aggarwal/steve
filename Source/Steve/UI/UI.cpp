@@ -22,7 +22,7 @@ Steve::UI::TranslateToQuads(StyledNode node)
        0.0f,
        node.GetPaintBounds().GetHorizontalBound().GetMin(),
        node.GetPaintBounds().GetVerticalBound().GetMin(),
-       glm::vec4(0.23f, 0.23f, 0.23f, 1.0f));
+       node.GetProperties().styles.GetBackgroundColor().GetColor());
    quads.push_back(vertices);
 
    for (const auto &child : node.GetChildren())

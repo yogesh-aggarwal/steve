@@ -11,6 +11,8 @@ DrawUI()
    {
       Steve::UI::Styles styles {};
       styles.GetPadding().SetAll(8.0f);
+      styles.SetBackgroundColor(
+          Steve::UI::StylingSpec::Color({ 0.1f, 0.1f, 0.1f, 1.0f }));
 
       canvas.UpdateStyles(styles);
    }
@@ -24,6 +26,8 @@ DrawUI()
 
          Steve::UI::Styles styles {};
          styles.SetHeight(16.0f);
+         styles.SetBackgroundColor(
+             Steve::UI::StylingSpec::Color({ 0.3f, 0.3f, 0.3f, 1.0f }));
          n.UpdateStyles(styles);
 
          canvas.PushChild(n);
@@ -35,37 +39,45 @@ DrawUI()
          n.GetProperties().id = "banner";
          n.SetParent(cRef);
 
+         auto nRef = CreateRef<Steve::UI::Container>(n);
+
          Steve::UI::Styles styles {};
          styles.SetHeight(32.0f);
+         styles.SetBackgroundColor(
+             Steve::UI::StylingSpec::Color({ 0.3f, 0.3f, 0.3f, 1.0f }));
          n.UpdateStyles(styles);
-
-         canvas.PushChild(n);
 
          // Left side
          {
             Steve::UI::Container l {};
             l.GetProperties().id = "left-side";
-            l.SetParent(cRef);
+            l.SetParent(nRef);
 
             Steve::UI::Styles styles {};
             styles.SetWidth(200.0f);
+            styles.SetBackgroundColor(
+                Steve::UI::StylingSpec::Color({ 0.7f, 0.7f, 0.7f, 1.0f }));
             l.UpdateStyles(styles);
 
-            l.PushChild(n);
+            n.PushChild(l);
          }
 
          // Right side
          {
             Steve::UI::Container r {};
             r.GetProperties().id = "right-side";
-            r.SetParent(cRef);
+            r.SetParent(nRef);
 
             Steve::UI::Styles styles {};
             styles.SetWidth(200.0f);
+            styles.SetBackgroundColor(
+                Steve::UI::StylingSpec::Color({ 0.7f, 0.7f, 0.7f, 1.0f }));
             r.UpdateStyles(styles);
 
-            r.PushChild(n);
+            n.PushChild(r);
          }
+
+         canvas.PushChild(n);
       }
    }
 
