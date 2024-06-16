@@ -2,4 +2,6 @@ Docs/
 Build/
 Temp/
 cmake-build-debug/
+
 /**/Scratch/*
+output/
