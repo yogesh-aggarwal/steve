@@ -34,7 +34,7 @@ namespace Steve::UI
          return !(*this == other);
       }
 
-      inline StylingSpec::Margin
+      inline StylingSpec::Margin &
       GetMargin()
       {
          return m_Margin;
@@ -46,7 +46,7 @@ namespace Steve::UI
          m_Margin = margin;
       }
 
-      inline StylingSpec::Padding
+      inline StylingSpec::Padding &
       GetPadding()
       {
          return m_Padding;
@@ -58,7 +58,7 @@ namespace Steve::UI
          m_Padding = padding;
       }
 
-      inline StylingSpec::Width
+      inline StylingSpec::Width &
       GetWidth()
       {
          return m_Width;
@@ -70,7 +70,7 @@ namespace Steve::UI
          m_Width = width;
       }
 
-      inline StylingSpec::Height
+      inline StylingSpec::Height &
       GetHeight()
       {
          return m_Height;
@@ -82,7 +82,7 @@ namespace Steve::UI
          m_Height = height;
       }
 
-      inline StylingSpec::Color
+      inline StylingSpec::Color &
       GetBackgroundColor()
       {
          return m_BackgroundColor;
