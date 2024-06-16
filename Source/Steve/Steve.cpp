@@ -3,6 +3,75 @@
 #include <Steve/UI/UI.hpp>
 #include <Steve/UI/Container/Container.hpp>
 
+Steve::UI::Container
+DrawUI()
+{
+   Steve::UI::Container canvas {};
+   auto                 cRef = CreateRef<Steve::UI::Container>(canvas);
+   {
+      Steve::UI::Styles styles {};
+      styles.GetPadding().SetAll(8.0f);
+
+      canvas.UpdateStyles(styles);
+   }
+
+   // Rest of the UI
+   {   // Topbar container
+      {
+         Steve::UI::Container n {};
+         n.GetProperties().id = "topbar";
+         n.SetParent(cRef);
+
+         Steve::UI::Styles styles {};
+         styles.SetHeight(16.0f);
+         n.UpdateStyles(styles);
+
+         canvas.PushChild(n);
+      }
+
+      // Banner
+      {
+         Steve::UI::Container n {};
+         n.GetProperties().id = "banner";
+         n.SetParent(cRef);
+
+         Steve::UI::Styles styles {};
+         styles.SetHeight(32.0f);
+         n.UpdateStyles(styles);
+
+         canvas.PushChild(n);
+
+         // Left side
+         {
+            Steve::UI::Container l {};
+            l.GetProperties().id = "left-side";
+            l.SetParent(cRef);
+
+            Steve::UI::Styles styles {};
+            styles.SetWidth(200.0f);
+            l.UpdateStyles(styles);
+
+            l.PushChild(n);
+         }
+
+         // Right side
+         {
+            Steve::UI::Container r {};
+            r.GetProperties().id = "right-side";
+            r.SetParent(cRef);
+
+            Steve::UI::Styles styles {};
+            styles.SetWidth(200.0f);
+            r.UpdateStyles(styles);
+
+            r.PushChild(n);
+         }
+      }
+   }
+
+   return canvas;
+}
+
 void
 Application::OnInit()
 {
@@ -37,29 +106,12 @@ Application::OnRender()
       return;
    }
 
-   // Draw a quad
+   // Draw UI
    {
-      Steve::UI::Styles styles {};
-      styles.SetWidth(32.0f);
-      styles.SetHeight(32.0f);
-
-      Steve::UI::Container c {};
-      auto                 cRef = CreateRef<Steve::UI::Container>(c);
-
-      for (int i = 0; i < 1; i++)
-      {
-         Steve::UI::Container n {};
-         n.GetProperties().id = "child-" + std::to_string(i);
-         n.SetParent(cRef);
-         n.UpdateStyles(styles);
-         c.PushChild(n);
-      }
-
-      auto vertices = Steve::UI::TranslateToQuads(c);
+      auto canvas   = DrawUI();
+      auto vertices = Steve::UI::TranslateToQuads(canvas);
       for (auto &v : vertices)
-      {
          Renderer::DrawVertices({ v.begin(), v.end() });
-      }
    }
 
    // End scene
