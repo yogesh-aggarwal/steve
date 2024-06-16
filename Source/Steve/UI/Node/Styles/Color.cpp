@@ -1,0 +1,59 @@
+#include "Color.hpp"
+
+Steve::UI::StylingSpec::Color
+Steve::UI::StylingSpec::Color::FromHexString(const std::string &hexString)
+{
+   if (hexString.size() != 9)
+   {
+      return Color(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+   }
+
+   float r =
+       static_cast<float>(std::stoi(hexString.substr(1, 2), nullptr, 16)) /
+       255.0f;
+   float g =
+       static_cast<float>(std::stoi(hexString.substr(3, 2), nullptr, 16)) /
+       255.0f;
+   float b =
+       static_cast<float>(std::stoi(hexString.substr(5, 2), nullptr, 16)) /
+       255.0f;
+   float a =
+       static_cast<float>(std::stoi(hexString.substr(7, 2), nullptr, 16)) /
+       255.0f;
+
+   return Color(glm::vec4(r, g, b, a));
+}
+
+Steve::UI::StylingSpec::Color
+Steve::UI::StylingSpec::Color::FromHex(uint32_t hex)
+{
+   float r = static_cast<float>((hex >> 24) & 0xFF) / 255.0f;
+   float g = static_cast<float>((hex >> 16) & 0xFF) / 255.0f;
+   float b = static_cast<float>((hex >> 8) & 0xFF) / 255.0f;
+   float a = static_cast<float>(hex & 0xFF) / 255.0f;
+
+   return Color(glm::vec4(r, g, b, a));
+}
+
+std::string
+Steve::UI::StylingSpec::Color::ToHexString() const
+{
+   char hexString[9];
+   std::snprintf(hexString,
+                 sizeof(hexString),
+                 "#%02x%02x%02x%02x",
+                 static_cast<int>(m_Color.r * 255),
+                 static_cast<int>(m_Color.g * 255),
+                 static_cast<int>(m_Color.b * 255),
+                 static_cast<int>(m_Color.a * 255));
+   return std::string(hexString);
+}
+
+uint32_t
+Steve::UI::StylingSpec::Color::ToHex() const
+{
+   return static_cast<uint32_t>(m_Color.r * 255) << 24 |
+          static_cast<uint32_t>(m_Color.g * 255) << 16 |
+          static_cast<uint32_t>(m_Color.b * 255) << 8 |
+          static_cast<uint32_t>(m_Color.a * 255);
+}

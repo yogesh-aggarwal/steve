@@ -4,6 +4,7 @@
 #include "Padding.hpp"
 #include "Width.hpp"
 #include "Height.hpp"
+#include "Color.hpp"
 
 namespace Steve::UI
 {
@@ -14,6 +15,7 @@ namespace Steve::UI
       StylingSpec::Padding m_Padding;
       StylingSpec::Width   m_Width;
       StylingSpec::Height  m_Height;
+      StylingSpec::Color   m_BackgroundColor;
 
    public:
       Styles()  = default;
@@ -78,6 +80,18 @@ namespace Steve::UI
       SetHeight(StylingSpec::Height height)
       {
          m_Height = height;
+      }
+
+      inline StylingSpec::Color
+      GetBackgroundColor()
+      {
+         return m_BackgroundColor;
+      }
+
+      inline void
+      SetBackgroundColor(StylingSpec::Color color)
+      {
+         m_BackgroundColor = color;
       }
    };
 }
