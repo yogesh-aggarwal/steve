@@ -103,23 +103,44 @@ namespace Steve::UI
       class PaintBounds
       {
       private:
+         float              m_XOffset;
+         float              m_YOffset;
          StylingSpec::Bound m_VerticalBound;
          StylingSpec::Bound m_HorizontalBound;
 
       public:
-         inline PaintBounds() : m_VerticalBound(0.0f), m_HorizontalBound(0.0f)
+         inline PaintBounds()
+             : m_XOffset(0.0f), m_YOffset(0.0f), m_VerticalBound(0.0f),
+               m_HorizontalBound(0.0f)
+         {
+         }
+
+         inline PaintBounds(float verticalBound, float horizontalBound)
+             : m_XOffset(0.0f), m_YOffset(0.0f), m_VerticalBound(verticalBound),
+               m_HorizontalBound(horizontalBound)
          {
          }
 
          inline PaintBounds(const StylingSpec::Bound &verticalBound,
                             const StylingSpec::Bound &horizontalBound)
-             : m_VerticalBound(verticalBound),
+             : m_XOffset(0.0f), m_YOffset(0.0f), m_VerticalBound(verticalBound),
+               m_HorizontalBound(horizontalBound)
+         {
+         }
+
+         inline PaintBounds(float xOffset,
+                            float yOffset,
+                            float verticalBound,
+                            float horizontalBound)
+             : m_XOffset(xOffset), m_YOffset(yOffset),
+               m_VerticalBound(verticalBound),
                m_HorizontalBound(horizontalBound)
          {
          }
 
          inline PaintBounds(const PaintBounds &other)
-             : m_VerticalBound(other.m_VerticalBound),
+             : m_XOffset(other.m_XOffset), m_YOffset(other.m_YOffset),
+               m_VerticalBound(other.m_VerticalBound),
                m_HorizontalBound(other.m_HorizontalBound)
          {
          }
@@ -127,6 +148,8 @@ namespace Steve::UI
          inline PaintBounds &
          operator=(const PaintBounds &other)
          {
+            m_XOffset         = other.m_XOffset;
+            m_YOffset         = other.m_YOffset;
             m_VerticalBound   = other.m_VerticalBound;
             m_HorizontalBound = other.m_HorizontalBound;
 
@@ -136,7 +159,9 @@ namespace Steve::UI
          inline bool
          operator==(const PaintBounds &other) const
          {
-            return m_VerticalBound == other.m_VerticalBound &&
+            return m_XOffset == other.m_XOffset &&
+                   m_YOffset == other.m_YOffset &&
+                   m_VerticalBound == other.m_VerticalBound &&
                    m_HorizontalBound == other.m_HorizontalBound;
          }
 
@@ -144,6 +169,37 @@ namespace Steve::UI
          operator!=(const PaintBounds &other) const
          {
             return !(*this == other);
+         }
+
+         inline float
+         GetXOffset() const
+         {
+            return m_XOffset;
+         }
+
+         inline void
+         SetXOffset(float xOffset)
+         {
+            m_XOffset = xOffset;
+         }
+
+         inline float
+         GetYOffset() const
+         {
+            return m_YOffset;
+         }
+
+         inline void
+         SetYOffset(float yOffset)
+         {
+            m_YOffset = yOffset;
+         }
+
+         inline void
+         SetOffsets(float xOffset, float yOffset)
+         {
+            m_XOffset = xOffset;
+            m_YOffset = yOffset;
          }
 
          inline StylingSpec::Bound &
@@ -273,6 +329,13 @@ namespace Steve::UI
       GetChildrenCount() const
       {
          return m_Children.size();
+      }
+
+      inline std::vector<Ref<Node>>
+      GetSiblingNodes() const
+      {
+         if (m_Parent == nullptr) { return {}; }
+         return m_Parent->GetChildren();
       }
 
       void

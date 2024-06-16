@@ -2,10 +2,10 @@
 
 #include <Steve/Graphics/Renderer/Core/Vertex.hpp>
 
-#include "Node/StyledNode.hpp"
+#include "Node/Node.hpp"
 
 namespace Steve::UI
 {
    std::vector<std::array<Vertex, 4>>
-   TranslateToQuads(StyledNode node);
+   TranslateToQuads(Ref<Node> node);
 }

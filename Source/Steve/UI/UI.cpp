@@ -11,27 +11,37 @@ const auto DEFAULT_QUADS = {
 };
 
 std::vector<std::array<Vertex, 4>>
-Steve::UI::TranslateToQuads(StyledNode node)
+Steve::UI::TranslateToQuads(Ref<Node> node)
 {
-   node.CalculateBounds();
+   node->CalculateBounds();
 
    std::vector<std::array<Vertex, 4>> quads;
 
    auto vertices = Steve::Draw::DrawQuad(
-       0.0f,
-       0.0f,
-       node.GetPaintBounds().GetHorizontalBound().GetMin(),
-       node.GetPaintBounds().GetVerticalBound().GetMin(),
-       node.GetProperties().styles.GetBackgroundColor().GetColor());
+       node->GetPaintBounds().GetXOffset(),
+       node->GetPaintBounds().GetYOffset(),
+       node->GetPaintBounds().GetHorizontalBound().GetMin(),
+       node->GetPaintBounds().GetVerticalBound().GetMin(),
+       node->GetProperties().styles.GetBackgroundColor().GetColor());
    quads.push_back(vertices);
 
-   for (const auto &child : node.GetChildren())
+   for (auto child : node->GetChildren())
    {
-      auto childQuads = TranslateToQuads(*child);
+      auto childQuads = TranslateToQuads(child);
       quads.insert(quads.end(), childQuads.begin(), childQuads.end());
    }
 
-   return quads;
+   // system("clear");
 
-   return DEFAULT_QUADS;
+   // for (auto &quad : quads)
+   // {
+   //    for (auto &vertex : quad)
+   //    {
+   //       vertex.Print();
+   //    }
+
+   //    std::cout << std::endl;
+   // }
+
+   return quads;
 }

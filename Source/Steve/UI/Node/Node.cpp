@@ -123,6 +123,8 @@ Steve::UI::Node::CalculateBounds()
       if (!m_PaintBounds.GetHorizontalBound().IsMaxBoundDefined())
          m_PaintBounds.GetHorizontalBound().Set(
              (float)ApplicationWindow::GetWidth());
+      std::cout << "Parent is null\n"
+                << m_PaintBounds.GetHorizontalBound().GetMax() << std::endl;
 
       /* Vertical bounds */
       if (!m_PaintBounds.GetVerticalBound().IsMaxBoundDefined())
@@ -139,16 +141,28 @@ Steve::UI::Node::CalculateBounds()
       auto definedHeight         = m_Properties.styles.GetHeight();
 
       /* Horizontal bounds */
-      m_PaintBounds.GetHorizontalBound().SetMax(
-          std::max(parentHorizontalBound.GetMax(), definedWidth.GetMax()));
-      m_PaintBounds.GetHorizontalBound().SetMin(
-          std::max(parentHorizontalBound.GetMin(), definedWidth.GetMin()));
+      if (definedWidth.IsBoundDefined())
+         m_PaintBounds.GetHorizontalBound().Set(definedWidth.GetValue());
+      else
+         m_PaintBounds.GetHorizontalBound().SetMax(
+             std::max(parentHorizontalBound.GetMax(), definedWidth.GetMax()));
+      if (definedWidth.IsBoundDefined())
+         m_PaintBounds.GetHorizontalBound().Set(definedWidth.GetValue());
+      else
+         m_PaintBounds.GetHorizontalBound().SetMin(
+             std::max(parentHorizontalBound.GetMin(), definedWidth.GetMin()));
 
       /* Vertical bounds */
-      m_PaintBounds.GetVerticalBound().SetMax(
-          std::max(parentVerticalBound.GetMax(), definedHeight.GetMax()));
-      m_PaintBounds.GetVerticalBound().SetMin(
-          std::max(parentVerticalBound.GetMin(), definedHeight.GetMin()));
+      if (definedHeight.IsBoundDefined())
+         m_PaintBounds.GetVerticalBound().Set(definedHeight.GetValue());
+      else
+         m_PaintBounds.GetVerticalBound().SetMax(
+             std::max(parentVerticalBound.GetMax(), definedHeight.GetMax()));
+      if (definedHeight.IsBoundDefined())
+         m_PaintBounds.GetVerticalBound().Set(definedHeight.GetValue());
+      else
+         m_PaintBounds.GetVerticalBound().SetMin(
+             std::max(parentVerticalBound.GetMin(), definedHeight.GetMin()));
    }
 
    /* Make every child re-calculate its bounds */

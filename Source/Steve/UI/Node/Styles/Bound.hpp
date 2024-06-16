@@ -96,9 +96,9 @@ namespace Steve::UI::StylingSpec
       }
 
       inline bool
-      IsBound() const
+      IsBoundDefined() const
       {
-         return m_Min != m_Max;
+         return m_Min >= 0.0f || m_Max >= 0.0f || m_Value >= 0.0f;
       }
 
       inline bool
