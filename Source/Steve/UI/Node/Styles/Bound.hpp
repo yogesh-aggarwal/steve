@@ -5,9 +5,9 @@ namespace Steve::UI::StylingSpec
    class Bound
    {
    protected:
-      float m_Min;
-      float m_Max;
-      float m_Value;
+      float m_Min   = 0.0f;
+      float m_Max   = -1.0f;
+      float m_Value = -1.0f;
 
    public:
       inline Bound(float all) : m_Min(all), m_Max(all), m_Value(all) {}
@@ -98,13 +98,14 @@ namespace Steve::UI::StylingSpec
       inline bool
       IsBoundDefined() const
       {
-         return m_Min >= 0.0f || m_Max >= 0.0f || m_Value >= 0.0f;
+         return IsMinBoundDefined() || IsMaxBoundDefined() ||
+                IsValueBoundDefined();
       }
 
       inline bool
       IsMinBoundDefined() const
       {
-         return m_Min >= 0.0f;
+         return m_Min > 0.0f;
       }
 
       inline bool

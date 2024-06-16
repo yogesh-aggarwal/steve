@@ -121,48 +121,83 @@ Steve::UI::Node::CalculateBounds()
    {
       /* Horizontal bounds */
       if (!m_PaintBounds.GetHorizontalBound().IsMaxBoundDefined())
-         m_PaintBounds.GetHorizontalBound().Set(
+         m_PaintBounds.GetHorizontalBound().SetMax(
              (float)ApplicationWindow::GetWidth());
-      std::cout << "Parent is null\n"
-                << m_PaintBounds.GetHorizontalBound().GetMax() << std::endl;
 
       /* Vertical bounds */
       if (!m_PaintBounds.GetVerticalBound().IsMaxBoundDefined())
-         m_PaintBounds.GetVerticalBound().Set(
+         m_PaintBounds.GetVerticalBound().SetMax(
              (float)ApplicationWindow::GetHeight());
    }
    /* Prepare paint bound */
    else
    {
-      auto parentPaintBounds     = m_Parent->GetPaintBounds();
-      auto parentHorizontalBound = parentPaintBounds.GetHorizontalBound();
-      auto parentVerticalBound   = parentPaintBounds.GetVerticalBound();
-      auto definedWidth          = m_Properties.styles.GetWidth();
-      auto definedHeight         = m_Properties.styles.GetHeight();
+      auto parentPadding     = m_Parent->GetProperties().styles.GetPadding();
+      auto parentPaintBounds = m_Parent->GetPaintBounds();
+
+      /**
+       * *** Read it only when then sections of the below code mention about it.
+       *
+       * NOTE:
+       *
+       * If the defined width/height is less than the parent's vertical bound
+       * then it's perfectly fine as there will be no overflow. But if
+       * there's then we must try to prevent overflow artifcats such as
+       * the current `Container` getting cut off by the parent's bounds.
+       *
+       * To do so, we'll reduce the indicated width/height by the parent's
+       * padding and set it as the max bound. If the width/height is still
+       * greater than the parent's max bound, then there will be a scroll
+       * bar which has not implemented yet.
+       *
+       * TODO: Implement scroll bars.
+       */
 
       /* Horizontal bounds */
-      if (definedWidth.IsBoundDefined())
-         m_PaintBounds.GetHorizontalBound().Set(definedWidth.GetValue());
-      else
-         m_PaintBounds.GetHorizontalBound().SetMax(
-             std::max(parentHorizontalBound.GetMax(), definedWidth.GetMax()));
-      if (definedWidth.IsBoundDefined())
-         m_PaintBounds.GetHorizontalBound().Set(definedWidth.GetValue());
-      else
-         m_PaintBounds.GetHorizontalBound().SetMin(
-             std::max(parentHorizontalBound.GetMin(), definedWidth.GetMin()));
+      {
+         auto definedWidth          = m_Properties.styles.GetWidth();
+         auto parentHorizontalBound = parentPaintBounds.GetHorizontalBound();
+
+         float nodeWidth = definedWidth.IsBoundDefined()
+                               ? definedWidth.GetValue()
+                               : parentHorizontalBound.GetMax();
+
+         auto parentHorizontalPadding =
+             parentPadding.GetLeft() + parentPadding.GetRight();
+
+         /* Refer to the note above */
+         bool isOverflowing = nodeWidth + parentHorizontalPadding >
+                              parentHorizontalBound.GetMax();
+         if (isOverflowing)
+            nodeWidth =
+                parentHorizontalBound.GetMax() - parentHorizontalPadding;
+
+         m_PaintBounds.GetHorizontalBound().Set(nodeWidth);
+         m_PaintBounds.SetXOffset(parentPadding.GetLeft());
+      }
 
       /* Vertical bounds */
-      if (definedHeight.IsBoundDefined())
-         m_PaintBounds.GetVerticalBound().Set(definedHeight.GetValue());
-      else
-         m_PaintBounds.GetVerticalBound().SetMax(
-             std::max(parentVerticalBound.GetMax(), definedHeight.GetMax()));
-      if (definedHeight.IsBoundDefined())
-         m_PaintBounds.GetVerticalBound().Set(definedHeight.GetValue());
-      else
-         m_PaintBounds.GetVerticalBound().SetMin(
-             std::max(parentVerticalBound.GetMin(), definedHeight.GetMin()));
+      {
+         auto definedHeight       = m_Properties.styles.GetHeight();
+         auto parentVerticalBound = parentPaintBounds.GetVerticalBound();
+
+         float nodeHeight = definedHeight.IsBoundDefined()
+                                ? definedHeight.GetValue()
+                                : parentVerticalBound.GetMin();
+         if (nodeHeight == -1.0f) nodeHeight = 0.0f;
+
+         auto parentVerticalPadding =
+             parentPadding.GetTop() + parentPadding.GetBottom();
+
+         /* Refer to the note above */
+         bool isOverflowing =
+             nodeHeight + parentVerticalPadding > parentVerticalBound.GetMax();
+         if (isOverflowing)
+            nodeHeight = parentVerticalBound.GetMax() - parentVerticalPadding;
+
+         m_PaintBounds.GetVerticalBound().Set(nodeHeight);
+         m_PaintBounds.SetYOffset(parentPadding.GetTop());
+      }
    }
 
    /* Make every child re-calculate its bounds */

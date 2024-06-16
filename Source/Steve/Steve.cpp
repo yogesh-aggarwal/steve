@@ -27,56 +27,58 @@ DrawUI()
          Steve::UI::Styles styles {};
          styles.SetHeight(16.0f);
          styles.SetBackgroundColor(
-             Steve::UI::StylingSpec::Color({ 0.3f, 0.3f, 0.3f, 1.0f }));
+             Steve::UI::StylingSpec::Color::FromHexString("#838383"));
          topbar->UpdateStyles(styles);
 
-         canvas->PushChild(topbar);
+         // canvas->PushChild(topbar);
       }
 
       // Banner
       {
-         auto banner = CreateRef<Steve::UI::Container>();
+         // auto banner = CreateRef<Steve::UI::Container>();
 
-         banner->GetProperties().id = "banner";
-         banner->SetParent(canvas);
+         // banner->GetProperties().id = "banner";
+         // banner->SetParent(canvas);
 
-         Steve::UI::Styles styles {};
-         styles.SetHeight(32.0f);
-         styles.SetBackgroundColor(
-             Steve::UI::StylingSpec::Color({ 0.3f, 0.3f, 0.3f, 1.0f }));
-         banner->UpdateStyles(styles);
+         // Steve::UI::Styles styles {};
+         // styles.SetHeight(400.0f);
+         // styles.GetPadding().SetAll(160.0f);
+         // styles.SetBackgroundColor(
+         //     Steve::UI::StylingSpec::Color::FromHexString("#4a4a4a"));
+         // banner->UpdateStyles(styles);
 
          // Left side
          {
             auto l                = CreateRef<Steve::UI::Container>();
             l->GetProperties().id = "left-side";
-            l->SetParent(banner);
+            l->SetParent(canvas);
 
             Steve::UI::Styles styles {};
             styles.SetWidth(200.0f);
+            styles.SetHeight(100.0f);
             styles.SetBackgroundColor(
-                Steve::UI::StylingSpec::Color({ 0.7f, 0.7f, 0.7f, 1.0f }));
+                Steve::UI::StylingSpec::Color::FromHexString("#3c3c3c"));
             l->UpdateStyles(styles);
 
-            banner->PushChild(l);
+            canvas->PushChild(l);
          }
 
-         // Right side
-         {
-            auto r                = CreateRef<Steve::UI::Container>();
-            r->GetProperties().id = "right-side";
-            r->SetParent(banner);
+         // // Right side
+         // {
+         //    auto r                = CreateRef<Steve::UI::Container>();
+         //    r->GetProperties().id = "right-side";
+         //    r->SetParent(canvas);
 
-            Steve::UI::Styles styles {};
-            styles.SetWidth(200.0f);
-            styles.SetBackgroundColor(
-                Steve::UI::StylingSpec::Color({ 0.7f, 0.7f, 0.7f, 1.0f }));
-            r->UpdateStyles(styles);
+         //    Steve::UI::Styles styles {};
+         //    styles.SetWidth(200.0f);
+         //    styles.SetBackgroundColor(
+         //        Steve::UI::StylingSpec::Color::FromHexString("#3c3c3c"));
+         //    r->UpdateStyles(styles);
 
-            banner->PushChild(r);
-         }
+         //    canvas->PushChild(r);
+         // }
 
-         canvas->PushChild(banner);
+         // canvas->PushChild(banner);
       }
    }
 
