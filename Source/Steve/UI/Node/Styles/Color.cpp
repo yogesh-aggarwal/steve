@@ -1,25 +1,27 @@
 #include "Color.hpp"
+#include <iostream>
 
 Steve::UI::StylingSpec::Color
 Steve::UI::StylingSpec::Color::FromHexString(const std::string &hexString)
 {
-   if (hexString.size() != 9)
-   {
-      return Color(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-   }
+   std::string hex = hexString;
+
+   if (hex.size() < 3) return Color(glm::vec4(0.0f));
+   // eg: #2c -> #2c2c2c
+   if (hex.size() == 3) hex += hexString.substr(1, 2) + hexString.substr(1, 2);
+   // eg: #fff -> #ffffff
+   if (hex.size() == 4) hex += hexString.substr(1, 3);
+   // eg: #2c2c2c -> #2c2c2cff
+   if (hex.size() == 7) hex += "FF";
 
    float r =
-       static_cast<float>(std::stoi(hexString.substr(1, 2), nullptr, 16)) /
-       255.0f;
+       static_cast<float>(std::stoi(hex.substr(1, 2), nullptr, 16)) / 255.0f;
    float g =
-       static_cast<float>(std::stoi(hexString.substr(3, 2), nullptr, 16)) /
-       255.0f;
+       static_cast<float>(std::stoi(hex.substr(3, 2), nullptr, 16)) / 255.0f;
    float b =
-       static_cast<float>(std::stoi(hexString.substr(5, 2), nullptr, 16)) /
-       255.0f;
+       static_cast<float>(std::stoi(hex.substr(5, 2), nullptr, 16)) / 255.0f;
    float a =
-       static_cast<float>(std::stoi(hexString.substr(7, 2), nullptr, 16)) /
-       255.0f;
+       static_cast<float>(std::stoi(hex.substr(7, 2), nullptr, 16)) / 255.0f;
 
    return Color(glm::vec4(r, g, b, a));
 }
