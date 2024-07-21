@@ -13,15 +13,13 @@ const auto DEFAULT_QUADS = {
 std::vector<std::array<Vertex, 4>>
 Steve::UI::TranslateToQuads(Ref<Node> node)
 {
-   node->CalculateBounds();
-
    std::vector<std::array<Vertex, 4>> quads;
 
    auto vertices = Steve::Draw::DrawQuad(
        node->GetPaintBounds().GetXOffset(),
        node->GetPaintBounds().GetYOffset(),
-       node->GetPaintBounds().GetHorizontalBound().GetMin(),
-       node->GetPaintBounds().GetVerticalBound().GetMin(),
+       node->GetPaintBounds().GetCalculatedMaxWidth(),
+       node->GetProperties().styles.GetHeight().GetValue(),
        node->GetProperties().styles.GetBackgroundColor().GetColor());
    quads.push_back(vertices);
 

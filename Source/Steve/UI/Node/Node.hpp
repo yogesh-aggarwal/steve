@@ -103,55 +103,41 @@ namespace Steve::UI
       class PaintBounds
       {
       private:
-         float              m_XOffset;
-         float              m_YOffset;
-         StylingSpec::Bound m_VerticalBound;
-         StylingSpec::Bound m_HorizontalBound;
+         float m_XOffset;
+         float m_YOffset;
+         float m_CalculatedMinWidth;
+         float m_CalculatedMaxWidth;
 
       public:
          inline PaintBounds()
-             : m_XOffset(0.0f), m_YOffset(0.0f), m_VerticalBound(0.0f),
-               m_HorizontalBound(0.0f)
+             : m_XOffset(0.0f), m_YOffset(0.0f), m_CalculatedMinWidth(0.0f),
+               m_CalculatedMaxWidth(0.0f)
          {
          }
 
-         inline PaintBounds(float verticalBound, float horizontalBound)
-             : m_XOffset(0.0f), m_YOffset(0.0f), m_VerticalBound(verticalBound),
-               m_HorizontalBound(horizontalBound)
-         {
-         }
-
-         inline PaintBounds(const StylingSpec::Bound &verticalBound,
-                            const StylingSpec::Bound &horizontalBound)
-             : m_XOffset(0.0f), m_YOffset(0.0f), m_VerticalBound(verticalBound),
-               m_HorizontalBound(horizontalBound)
+         inline PaintBounds(float xOffset, float yOffset)
+             : m_XOffset(xOffset), m_YOffset(yOffset),
+               m_CalculatedMinWidth(0.0f), m_CalculatedMaxWidth(0.0f)
          {
          }
 
          inline PaintBounds(float xOffset,
                             float yOffset,
-                            float verticalBound,
-                            float horizontalBound)
+                            float calculatedMinWidth,
+                            float calculatedMaxWidth)
              : m_XOffset(xOffset), m_YOffset(yOffset),
-               m_VerticalBound(verticalBound),
-               m_HorizontalBound(horizontalBound)
-         {
-         }
-
-         inline PaintBounds(const PaintBounds &other)
-             : m_XOffset(other.m_XOffset), m_YOffset(other.m_YOffset),
-               m_VerticalBound(other.m_VerticalBound),
-               m_HorizontalBound(other.m_HorizontalBound)
+               m_CalculatedMinWidth(calculatedMinWidth),
+               m_CalculatedMaxWidth(calculatedMaxWidth)
          {
          }
 
          inline PaintBounds &
          operator=(const PaintBounds &other)
          {
-            m_XOffset         = other.m_XOffset;
-            m_YOffset         = other.m_YOffset;
-            m_VerticalBound   = other.m_VerticalBound;
-            m_HorizontalBound = other.m_HorizontalBound;
+            m_XOffset            = other.m_XOffset;
+            m_YOffset            = other.m_YOffset;
+            m_CalculatedMinWidth = other.m_CalculatedMinWidth;
+            m_CalculatedMaxWidth = other.m_CalculatedMaxWidth;
 
             return *this;
          }
@@ -161,8 +147,8 @@ namespace Steve::UI
          {
             return m_XOffset == other.m_XOffset &&
                    m_YOffset == other.m_YOffset &&
-                   m_VerticalBound == other.m_VerticalBound &&
-                   m_HorizontalBound == other.m_HorizontalBound;
+                   m_CalculatedMinWidth == other.m_CalculatedMinWidth &&
+                   m_CalculatedMaxWidth == other.m_CalculatedMaxWidth;
          }
 
          inline bool
@@ -202,62 +188,36 @@ namespace Steve::UI
             m_YOffset = yOffset;
          }
 
-         inline StylingSpec::Bound &
-         GetVerticalBound()
+         inline float
+         GetCalculatedMinWidth() const
          {
-            return m_VerticalBound;
+            return m_CalculatedMinWidth;
          }
 
-         inline StylingSpec::Bound &
-         GetHorizontalBound()
+         void
+         SetCalculatedMinWidth(float calculatedMinWidth)
          {
-            return m_HorizontalBound;
+            m_CalculatedMinWidth = calculatedMinWidth;
          }
 
-         inline void
-         SetVerticalBound(const StylingSpec::Bound &bound)
+         inline float
+         GetCalculatedMaxWidth() const
          {
-            m_VerticalBound = bound;
+            return m_CalculatedMaxWidth;
          }
 
-         inline void
-         SetHorizontalBound(const StylingSpec::Bound &bound)
+         void
+         SetCalculatedMaxWidth(float calculatedMaxWidth)
          {
-            m_HorizontalBound = bound;
-         }
-
-         inline void
-         SetBounds(const StylingSpec::Bound &verticalBound,
-                   const StylingSpec::Bound &horizontalBound)
-         {
-            m_VerticalBound   = verticalBound;
-            m_HorizontalBound = horizontalBound;
-         }
-
-         inline void
-         SetBounds(const PaintBounds &bounds)
-         {
-            m_VerticalBound   = bounds.m_VerticalBound;
-            m_HorizontalBound = bounds.m_HorizontalBound;
+            m_CalculatedMaxWidth = calculatedMaxWidth;
          }
 
          inline void
          Reset()
          {
-            m_VerticalBound   = 0.0f;
-            m_HorizontalBound = 0.0f;
-         }
-
-         inline void
-         ResetVerticalBound()
-         {
-            m_VerticalBound = 0.0f;
-         }
-
-         inline void
-         ResetHorizontalBound()
-         {
-            m_HorizontalBound = 0.0f;
+            m_XOffset            = 0.0f;
+            m_YOffset            = 0.0f;
+            m_CalculatedMinWidth = 0.0f;
          }
       };
 
@@ -295,8 +255,8 @@ namespace Steve::UI
          return m_InternalID;
       }
 
-      inline PaintBounds
-      GetPaintBounds() const
+      inline PaintBounds &
+      GetPaintBounds()
       {
          return m_PaintBounds;
       }
@@ -358,5 +318,12 @@ namespace Steve::UI
 
       void
       CalculateBounds();
+
+   private:
+      void
+      CalculateMinBounds();
+
+      void
+      CalculatePaintBounds();
    };
 }

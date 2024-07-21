@@ -6,81 +6,72 @@
 Ref<Steve::UI::Container>
 DrawUI()
 {
-   auto canvas = CreateRef<Steve::UI::Container>();
+   auto canvas                = CreateRef<Steve::UI::Container>();
+   canvas->GetProperties().id = "body";
    {
       Steve::UI::Styles styles {};
       styles.GetPadding().SetAll(8.0f);
       styles.SetBackgroundColor(
-          Steve::UI::StylingSpec::Color({ 0.1f, 0.1f, 0.1f, 1.0f }));
+          Steve::UI::StylingSpec::Color::FromHexString("#fff"));
+      styles.SetWidth(1056.0f);
 
       canvas->UpdateStyles(styles);
    }
 
    // Rest of the UI
-   {   // Topbar container
-      {
-         auto topbar = CreateRef<Steve::UI::Container>();
+   {
+      Steve::UI::StylingSpec::Width width {};
+      width.SetMin(100.0f);
 
-         topbar->GetProperties().id = "topbar";
-         topbar->SetParent(canvas);
+      // Left side
+      {
+         auto l                = CreateRef<Steve::UI::Container>();
+         l->GetProperties().id = "left-side";
+         l->SetParent(canvas);
 
          Steve::UI::Styles styles {};
-         styles.SetHeight(16.0f);
+         // styles.SetWidth(width);
+         styles.GetWidth().SetMin(500.0f);
+         styles.SetHeight(100.0f);
          styles.SetBackgroundColor(
-             Steve::UI::StylingSpec::Color::FromHexString("#838383"));
-         topbar->UpdateStyles(styles);
+             Steve::UI::StylingSpec::Color::FromHexString("#ff0000"));
+         l->UpdateStyles(styles);
 
-         // canvas->PushChild(topbar);
+         canvas->PushChild(l);
       }
-
-      // Banner
+      // Right side
       {
-         // auto banner = CreateRef<Steve::UI::Container>();
+         auto r                = CreateRef<Steve::UI::Container>();
+         r->GetProperties().id = "right-side";
+         r->SetParent(canvas);
 
-         // banner->GetProperties().id = "banner";
-         // banner->SetParent(canvas);
+         Steve::UI::Styles styles {};
+         styles.SetWidth(width);
+         styles.SetHeight(80.0f);
+         styles.SetBackgroundColor(
+             Steve::UI::StylingSpec::Color::FromHexString("#00ff00"));
+         r->UpdateStyles(styles);
 
-         // Steve::UI::Styles styles {};
-         // styles.SetHeight(400.0f);
-         // styles.GetPadding().SetAll(160.0f);
-         // styles.SetBackgroundColor(
-         //     Steve::UI::StylingSpec::Color::FromHexString("#4a4a4a"));
-         // banner->UpdateStyles(styles);
+         canvas->PushChild(r);
+      }
+      // Right side
+      {
+         auto r                = CreateRef<Steve::UI::Container>();
+         r->GetProperties().id = "right-side";
+         r->SetParent(canvas);
 
-         // Left side
-         {
-            auto l                = CreateRef<Steve::UI::Container>();
-            l->GetProperties().id = "left-side";
-            l->SetParent(canvas);
+         Steve::UI::Styles styles {};
+         styles.SetWidth(width);
+         styles.SetHeight(80.0f);
+         styles.SetBackgroundColor(
+             Steve::UI::StylingSpec::Color::FromHexString("#0000ff"));
+         r->UpdateStyles(styles);
 
-            Steve::UI::Styles styles {};
-            styles.SetWidth(200.0f);
-            styles.SetHeight(100.0f);
-            styles.SetBackgroundColor(
-                Steve::UI::StylingSpec::Color::FromHexString("#3c3c3c"));
-            l->UpdateStyles(styles);
-
-            canvas->PushChild(l);
-         }
-
-         // // Right side
-         // {
-         //    auto r                = CreateRef<Steve::UI::Container>();
-         //    r->GetProperties().id = "right-side";
-         //    r->SetParent(canvas);
-
-         //    Steve::UI::Styles styles {};
-         //    styles.SetWidth(200.0f);
-         //    styles.SetBackgroundColor(
-         //        Steve::UI::StylingSpec::Color::FromHexString("#3c3c3c"));
-         //    r->UpdateStyles(styles);
-
-         //    canvas->PushChild(r);
-         // }
-
-         // canvas->PushChild(banner);
+         canvas->PushChild(r);
       }
    }
+
+   canvas->CalculateBounds();
 
    return canvas;
 }

@@ -6,10 +6,8 @@
 #include <Steve/Application/ApplicationWindow.hpp>
 
 Steve::UI::Node::Node()
-    : m_InternalID(), m_Properties({}),
-      m_PaintBounds(
-          { m_Properties.styles.GetWidth(), m_Properties.styles.GetHeight() }),
-      m_Parent(nullptr), m_Children({})
+    : m_InternalID(), m_Properties({}), m_PaintBounds(), m_Parent(nullptr),
+      m_Children({})
 {
 }
 
@@ -116,91 +114,87 @@ Steve::UI::Node::RemoveChildByInternalID(const InternalID &id)
 void
 Steve::UI::Node::CalculateBounds()
 {
-   /* If the parent is null, then the bounds are the window bounds (for now) */
    if (!m_Parent)
    {
-      /* Horizontal bounds */
-      if (!m_PaintBounds.GetHorizontalBound().IsMaxBoundDefined())
-         m_PaintBounds.GetHorizontalBound().SetMax(
-             (float)ApplicationWindow::GetWidth());
-
-      /* Vertical bounds */
-      if (!m_PaintBounds.GetVerticalBound().IsMaxBoundDefined())
-         m_PaintBounds.GetVerticalBound().SetMax(
-             (float)ApplicationWindow::GetHeight());
+      m_PaintBounds.SetCalculatedMaxWidth(
+          m_Properties.styles.GetWidth().GetValue());
+      m_PaintBounds.SetCalculatedMinWidth(
+          m_Properties.styles.GetWidth().GetValue());
    }
-   /* Prepare paint bound */
-   else
+
+   CalculateMinBounds();
+   CalculatePaintBounds();
+}
+
+void
+Steve::UI::Node::CalculateMinBounds()
+{
+   // If the node has children, calculate the bounds of the children first.
+   float minWidth = m_Properties.styles.GetWidth().GetMin();
+   if (m_Children.size())
    {
-      auto parentPadding     = m_Parent->GetProperties().styles.GetPadding();
-      auto parentPaintBounds = m_Parent->GetPaintBounds();
+      // Make every child calculate its minimum width
+      for (auto child : m_Children)
+         child->CalculateMinBounds();
 
-      /**
-       * *** Read it only when then sections of the below code mention about it.
-       *
-       * NOTE:
-       *
-       * If the defined width/height is less than the parent's vertical bound
-       * then it's perfectly fine as there will be no overflow. But if
-       * there's then we must try to prevent overflow artifcats such as
-       * the current `Container` getting cut off by the parent's bounds.
-       *
-       * To do so, we'll reduce the indicated width/height by the parent's
-       * padding and set it as the max bound. If the width/height is still
-       * greater than the parent's max bound, then there will be a scroll
-       * bar which has not implemented yet.
-       *
-       * TODO: Implement scroll bars.
-       */
+      // Calculate the minimum width of the children and set it as the minimum
+      // width of current node (because it's the parent of all of them).
+      float childrenMinWidthSum = 0;
+      for (const auto &child : m_Children)
+         childrenMinWidthSum += child->GetPaintBounds().GetCalculatedMinWidth();
 
-      /* Horizontal bounds */
+      // The minimum width of the parent node is the maximum between the minimum
+      // width of the parent node and the sum of the minimum width of all
+      // children.
+      minWidth = std::max(minWidth, childrenMinWidthSum);
+   }
+
+   // TODO: Include other factors as well such as fonts and paddings.
+
+   // Set the calculated minimum width of the node.
+   m_PaintBounds.SetCalculatedMinWidth(minWidth);
+}
+
+void
+Steve::UI::Node::CalculatePaintBounds()
+{
+   if (!m_Children.size()) return;
+
+   int nNodesWithWidth = 0;
+   for (auto child : m_Children)
+      if (child->GetPaintBounds().GetCalculatedMinWidth()) nNodesWithWidth++;
+
+   float width         = m_PaintBounds.GetCalculatedMaxWidth();
+   float eachNodeWidth = width / nNodesWithWidth;
+
+   float variableWidth     = width;
+   int   nStaticWidthNodes = 0;
+   for (auto child : m_Children)
+   {
+      const float minNodeWidth =
+          child->GetPaintBounds().GetCalculatedMinWidth();
+      if (minNodeWidth > eachNodeWidth)
       {
-         auto definedWidth          = m_Properties.styles.GetWidth();
-         auto parentHorizontalBound = parentPaintBounds.GetHorizontalBound();
-
-         float nodeWidth = definedWidth.IsBoundDefined()
-                               ? definedWidth.GetValue()
-                               : parentHorizontalBound.GetMax();
-
-         auto parentHorizontalPadding =
-             parentPadding.GetLeft() + parentPadding.GetRight();
-
-         /* Refer to the note above */
-         bool isOverflowing = nodeWidth + parentHorizontalPadding >
-                              parentHorizontalBound.GetMax();
-         if (isOverflowing)
-            nodeWidth =
-                parentHorizontalBound.GetMax() - parentHorizontalPadding;
-
-         m_PaintBounds.GetHorizontalBound().Set(nodeWidth);
-         m_PaintBounds.SetXOffset(parentPadding.GetLeft());
-      }
-
-      /* Vertical bounds */
-      {
-         auto definedHeight       = m_Properties.styles.GetHeight();
-         auto parentVerticalBound = parentPaintBounds.GetVerticalBound();
-
-         float nodeHeight = definedHeight.IsBoundDefined()
-                                ? definedHeight.GetValue()
-                                : parentVerticalBound.GetMin();
-         if (nodeHeight == -1.0f) nodeHeight = 0.0f;
-
-         auto parentVerticalPadding =
-             parentPadding.GetTop() + parentPadding.GetBottom();
-
-         /* Refer to the note above */
-         bool isOverflowing =
-             nodeHeight + parentVerticalPadding > parentVerticalBound.GetMax();
-         if (isOverflowing)
-            nodeHeight = parentVerticalBound.GetMax() - parentVerticalPadding;
-
-         m_PaintBounds.GetVerticalBound().Set(nodeHeight);
-         m_PaintBounds.SetYOffset(parentPadding.GetTop());
+         variableWidth -= minNodeWidth;
+         nStaticWidthNodes++;
       }
    }
 
-   /* Make every child re-calculate its bounds */
-   for (const auto &child : m_Children)
-      child->CalculateBounds();
+   int   nVariableNodes        = nNodesWithWidth - nStaticWidthNodes;
+   float eachVariableNodeWidth = variableWidth / nVariableNodes;
+
+   float xOffset = 0;
+   for (auto child : m_Children)
+   {
+      float width = child->GetPaintBounds().GetCalculatedMinWidth();
+      if (width < eachNodeWidth) width = eachVariableNodeWidth;
+
+      child->GetPaintBounds().SetXOffset(xOffset);
+      child->GetPaintBounds().SetYOffset(0);
+      child->GetPaintBounds().SetCalculatedMaxWidth(width);
+
+      child->CalculatePaintBounds();
+
+      xOffset += width;
+   }
 }
