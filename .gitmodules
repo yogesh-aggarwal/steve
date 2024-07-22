@@ -7,3 +7,6 @@
 [submodule "Vendor/nanoid_cpp"]
 	path = Vendor/nanoid_cpp
 	url = https://github.com/mcmikecreations/nanoid_cpp
+[submodule "Vendor/yaml-cpp"]
+	path = Vendor/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp

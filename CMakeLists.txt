@@ -86,10 +86,15 @@ add_subdirectory("Vendor/glad")
 target_link_libraries(${CMAKE_PROJECT_NAME} glad)
 SUCCESS("Linked library: GLAD")
 
-# nanoid_cpp Library
+# nanoid_cpp
 add_subdirectory("Vendor/nanoid_cpp")
 target_link_libraries(${CMAKE_PROJECT_NAME} nanoid)
 include_directories("Vendor/nanoid_cpp/inc")
+
+# yaml-cpp
+add_subdirectory("Vendor/yaml-cpp")
+target_link_libraries(${CMAKE_PROJECT_NAME} yaml-cpp)
+include_directories("Vendor/yaml-cpp/include")
 
 message("[(---- Done Linking Libraries ----)]\n")
 
