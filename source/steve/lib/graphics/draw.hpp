@@ -12,6 +12,7 @@ namespace steve {
     * @brief Namespace for drawing functions which only operates in maths &
     * don't use any graphics context & no draw calls are made. Read details for
     * more information on the same.
+    *
     * @details Functions in this namespace has nothing to do with any of the
     * graphics contexts and for that very reason they don't make any of the draw
     * calls but rather they are used to generate vertices for drawing. They use
