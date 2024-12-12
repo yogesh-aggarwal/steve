@@ -7,8 +7,8 @@
 #include <optional>
 #include <source_location>
 
-#include <steve/core/error/error.hpp>
-#include <steve/core/common/helpers.hpp>
+#include "../error/error.hpp"
+#include "../common/helpers.hpp"
 
 // General template for Result
 template<typename T>
@@ -37,11 +37,11 @@ public:
    }
 
    inline T &
-   get_value() const {
+   get_value() {
       if (!value.has_value()) {
          throw std::runtime_error("Attempted to access value from an error Result");
       }
-      return *value;
+      return value.value();
    }
 
    inline const Error &
