@@ -1,7 +1,9 @@
-Docs/
+docs/
 build/
-Temp/
+temp/
 cmake-build-debug/
 
-/**/Scratch/*
+dev/
+cmd/test/
+
 output/
