@@ -1,12 +1,12 @@
-[submodule "Vendor/glfw"]
-	path = Vendor/glfw
+[submodule "vendor/glfw"]
+	path = vendor/glfw
 	url = https://github.com/glfw/glfw
-[submodule "Vendor/glm"]
-	path = Vendor/glm
+[submodule "vendor/glm"]
+	path = vendor/glm
 	url = https://github.com/g-truc/glm
-[submodule "Vendor/nanoid_cpp"]
-	path = Vendor/nanoid_cpp
+[submodule "vendor/nanoid_cpp"]
+	path = vendor/nanoid_cpp
 	url = https://github.com/mcmikecreations/nanoid_cpp
-[submodule "Vendor/yaml-cpp"]
-	path = Vendor/yaml-cpp
+[submodule "vendor/yaml-cpp"]
+	path = vendor/yaml-cpp
 	url = https://github.com/jbeder/yaml-cpp
