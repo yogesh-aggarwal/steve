@@ -1,7 +1,5 @@
 #pragma once
 
-#include <steve/core/pch>
-
 #include <steve/lib/application/window.hpp>
 
 #include <steve/lib/graphics/draw.hpp>
