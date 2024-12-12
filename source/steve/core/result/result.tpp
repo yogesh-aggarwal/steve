@@ -36,7 +36,7 @@ public:
       return !error.has_value();
    }
 
-   inline const T &
+   inline T &
    get_value() const {
       if (!value.has_value()) {
          throw std::runtime_error("Attempted to access value from an error Result");
@@ -192,3 +192,5 @@ inline Result<void>
 Ok() {
    return Result<void>::ok();
 }
+
+using VoidResult = Result<void>;
