@@ -1,0 +1,26 @@
+#pragma once
+
+/* ------------------------------------------------------------------------------------------------------- */
+
+// STL
+#include <iostream>
+#include <limits>
+
+/* ------------------------------------------------------------------------------------------------------- */
+
+// Common
+#include "common/defines.hpp"
+#include "common/helpers.hpp"
+
+// Error
+#include "error/codes.hpp"
+#include "error/error.hpp"
+#include "error/unit.hpp"
+
+// Result
+#include "result/result.tpp"
+
+// Utility
+#include "utility/log.hpp"
+
+/* ------------------------------------------------------------------------------------------------------- */
