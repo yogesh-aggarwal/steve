@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 SHADERS_DIR = "assets/shaders"
-SHADERS_HEADER_FILE = "source/steve/shaders.hpp"
+SHADERS_HEADER_FILE = "source/steve/lib/graphics/shaders.hpp"
 
 def get_formatted_datetime():
     # Get the current date and time
@@ -37,14 +37,18 @@ shader_file_content += "/* THIS FILE IS GENERATED USING THE `make shaders` TARGE
 shader_file_content += "/* ------------------------------------------------------------------------------------------------------- */\n"
 shader_file_content += "\n"
 shader_file_content += "#pragma once\n"
+shader_file_content += "\n"
+shader_file_content += "/* ------------------------------------------------------------------------------------------------------- */\n"
 
 
 for shader in shaders:
-    shader_file_content += "\n"
     shader_file_content += f"// {SHADERS_DIR}/{shader['filename']}\n"
+    shader_file_content += "/* ------------------------------------------------------------------------------------------------------- */\n\n"
     shader_file_content += (
         f'const char* STEVE_SHADER_SOURCE_{shader['codename']} = R"({shader['content']})";\n'
     )
+    shader_file_content += "\n/* ------------------------------------------------------------------------------------------------------- */\n"
+
 
 
 with open(SHADERS_HEADER_FILE, "w+") as f:
