@@ -91,6 +91,8 @@
 		"valarray": "cpp",
 		"variant": "cpp",
 		"shared_mutex": "cpp",
-		"*.tpp": "cpp"
+		"*.tpp": "cpp",
+		"regex": "cpp",
+		"expected": "cpp"
 	},
 }
