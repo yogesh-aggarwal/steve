@@ -28,38 +28,40 @@ target_compile_definitions(steve PRIVATE DEBUG)
 # Link libraries
 #-----------------------------------------------------------------------------------------------------------#
 
-# CURL
+# curl
 find_package(CURL REQUIRED)
-include_directories(${CURL_INCLUDE_DIR})
+include_directories(${PROJECT_NAME} PRIVATE ${CURL_INCLUDE_DIR})
 target_link_libraries(${PROJECT_NAME} PRIVATE ${CURL_LIBRARIES})
 
-# LibArchive
+# archive
 find_package(LibArchive REQUIRED)
-include_directories(${LibArchive_INCLUDE_DIRS})
+include_directories(${PROJECT_NAME} PRIVATE ${LibArchive_INCLUDE_DIRS})
 target_link_libraries(${PROJECT_NAME} PRIVATE ${LibArchive_LIBRARIES})
 
 # GLAD
 add_subdirectory("../vendor/glad" "${CMAKE_BINARY_DIR}/glad")
-include_directories("../vendor/glad/include")
 target_link_libraries(${PROJECT_NAME} PRIVATE glad)
+target_include_directories(${PROJECT_NAME} PUBLIC ../vendor/glad/include)
 
 # GLFW3
 add_subdirectory("../vendor/glfw" "${CMAKE_BINARY_DIR}/glfw")
-include_directories("../vendor/glfw/include")
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
+target_include_directories(${PROJECT_NAME} PUBLIC ../vendor/glfw/include)
 
 # GLM
-include_directories("../vendor/glm")
+add_subdirectory("../vendor/glm" "${CMAKE_BINARY_DIR}/glm")
+target_link_libraries(${PROJECT_NAME} PRIVATE glm)
+target_include_directories(${PROJECT_NAME} PUBLIC ../vendor/glm)
 
 # yaml-cpp
 add_subdirectory("../vendor/yaml-cpp" "${CMAKE_BINARY_DIR}/yaml-cpp")
 target_link_libraries(${PROJECT_NAME} PRIVATE yaml-cpp)
-include_directories("../vendor/yaml-cpp/include")
+target_include_directories(${PROJECT_NAME} PUBLIC ../vendor/yaml-cpp/include)
 
-# nanoid_cpp Library
+# nanoid_cpp
 add_subdirectory("../vendor/nanoid_cpp" "${CMAKE_BINARY_DIR}/nanoid_cpp")
 target_link_libraries(${PROJECT_NAME} PRIVATE nanoid)
-include_directories("../vendor/nanoid_cpp/inc")
+target_include_directories(${PROJECT_NAME} PUBLIC ../vendor/nanoid_cpp/include)
 
 #-----------------------------------------------------------------------------------------------------------#
 # Change the library type to SHARED for a dynamic library
