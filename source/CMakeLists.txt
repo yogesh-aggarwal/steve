@@ -33,10 +33,10 @@ find_package(CURL REQUIRED)
 include_directories(${PROJECT_NAME} PRIVATE ${CURL_INCLUDE_DIR})
 target_link_libraries(${PROJECT_NAME} PRIVATE ${CURL_LIBRARIES})
 
-# archive
-find_package(LibArchive REQUIRED)
-include_directories(${PROJECT_NAME} PRIVATE ${LibArchive_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} PRIVATE ${LibArchive_LIBRARIES})
+# libarchive
+add_subdirectory("../vendor/libarchive" "${CMAKE_BINARY_DIR}/libarchive")
+target_link_libraries(${PROJECT_NAME} PRIVATE archive)
+target_include_directories(${PROJECT_NAME} PUBLIC ../vendor/libarchive/libarchive)
 
 # GLAD
 add_subdirectory("../vendor/glad" "${CMAKE_BINARY_DIR}/glad")
