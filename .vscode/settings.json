@@ -93,6 +93,7 @@
 		"shared_mutex": "cpp",
 		"*.tpp": "cpp",
 		"regex": "cpp",
-		"expected": "cpp"
+		"expected": "cpp",
+		"typeindex": "cpp"
 	},
 }
