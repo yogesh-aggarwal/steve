@@ -37,7 +37,7 @@ hello_steve() {
 
 namespace steve {
    inline void
-   run(application::Configuration initial_config) {
+   run_as_app(application::Configuration initial_config) {
       application::Window::initialize(initial_config)   //
           .except("Failed to initialize application.")
           .panic_if_error();

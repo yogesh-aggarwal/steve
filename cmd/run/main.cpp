@@ -97,7 +97,7 @@ public:
 
 int
 main() {
-   steve::run({
+   run_as_app({
        .Title     = "Steve Browser",
        .Width     = (uint32_t)(1920.0f * 0.55f),
        .Height    = (uint32_t)(1080.0f * 0.65f),
