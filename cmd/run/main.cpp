@@ -1,18 +1,20 @@
 #include <steve/steve.hpp>
 
 using namespace steve;
-using namespace steve::application;
+using namespace application;
+using namespace ui;
+using namespace StylingSpec;
 
 /* ------------------------------------------------------------------------------------------------------- */
 
-Ref<steve::ui::Container>
+Ref<Container>
 DrawUI() {
-   auto canvas                = CreateRef<steve::ui::Container>();
+   auto canvas                = CreateRef<Container>();
    canvas->GetProperties().id = "body";
    {
-      steve::ui::Styles styles {};
+      Styles styles {};
       styles.GetPadding().SetAll(8.0f);
-      styles.SetBackgroundColor(steve::ui::StylingSpec::Color::FromHexString("#fff"));
+      styles.SetBackgroundColor(Color::FromHexString("#fff"));
       styles.SetWidth(1056.0f);
 
       canvas->UpdateStyles(styles);
@@ -20,48 +22,48 @@ DrawUI() {
 
    // Rest of the ui
    {
-      steve::ui::StylingSpec::Width width {};
+      Width width {};
       width.SetMin(100.0f);
 
       // Left side
       {
-         auto l                = CreateRef<steve::ui::Container>();
+         auto l                = CreateRef<Container>();
          l->GetProperties().id = "left-side";
          l->SetParent(canvas);
 
-         steve::ui::Styles styles {};
+         Styles styles {};
          // styles.SetWidth(width);
          styles.GetWidth().SetMin(500.0f);
          styles.SetHeight(100.0f);
-         styles.SetBackgroundColor(steve::ui::StylingSpec::Color::FromHexString("#ff0000"));
+         styles.SetBackgroundColor(Color::FromHexString("#ff0000"));
          l->UpdateStyles(styles);
 
          canvas->PushChild(l);
       }
       // Right side
       {
-         auto r                = CreateRef<steve::ui::Container>();
+         auto r                = CreateRef<Container>();
          r->GetProperties().id = "right-side";
          r->SetParent(canvas);
 
-         steve::ui::Styles styles {};
+         Styles styles {};
          styles.SetWidth(width);
          styles.SetHeight(80.0f);
-         styles.SetBackgroundColor(steve::ui::StylingSpec::Color::FromHexString("#00ff00"));
+         styles.SetBackgroundColor(Color::FromHexString("#00ff00"));
          r->UpdateStyles(styles);
 
          canvas->PushChild(r);
       }
       // Right side
       {
-         auto r                = CreateRef<steve::ui::Container>();
+         auto r                = CreateRef<Container>();
          r->GetProperties().id = "right-side";
          r->SetParent(canvas);
 
-         steve::ui::Styles styles {};
+         Styles styles {};
          styles.SetWidth(width);
          styles.SetHeight(80.0f);
-         styles.SetBackgroundColor(steve::ui::StylingSpec::Color::FromHexString("#0000ff"));
+         styles.SetBackgroundColor(Color::FromHexString("#0000ff"));
          r->UpdateStyles(styles);
 
          canvas->PushChild(r);
@@ -89,7 +91,7 @@ public:
       // Draw ui
       {
          auto canvas   = DrawUI();
-         auto vertices = steve::ui::TranslateToQuads(canvas);
+         auto vertices = TranslateToQuads(canvas);
          for (auto &v : vertices)
             steve::renderer::draw_vertices({ v.begin(), v.end() })
                 .except("Failed to draw vertices.")
