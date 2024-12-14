@@ -9,19 +9,19 @@ using namespace steve;
 
 /* ------------------------------------------------------------------------------------------------------- */
 
-Ref<steve::renderer::State> s_RendererState = nullptr;
+Ref<renderer::State> s_RendererState = nullptr;
 
 /* ------------------------------------------------------------------------------------------------------- */
 
 bool
-steve::renderer::has_initialized() {
-   return false;
+renderer::has_initialized() {
+   return s_RendererState && s_RendererState->has_initialized;
 }
 
 /* ------------------------------------------------------------------------------------------------------- */
 
 VoidResult
-steve::renderer::initialize() {
+renderer::initialize() {
    auto _ = Ok();
 
    // Initialize shaders
@@ -77,8 +77,8 @@ steve::renderer::initialize() {
 /* ------------------------------------------------------------------------------------------------------- */
 
 VoidResult
-steve::renderer::begin_scene() {
-   if (!s_RendererState->has_initialized) {
+renderer::begin_scene() {
+   if (!has_initialized()) {
       return Error("Renderer not initialized");
    }
    if (s_RendererState->has_begun_scene) {
@@ -96,8 +96,8 @@ steve::renderer::begin_scene() {
 /* ------------------------------------------------------------------------------------------------------- */
 
 VoidResult
-steve::renderer::end_scene() {
-   if (!s_RendererState->has_initialized) {
+renderer::end_scene() {
+   if (!has_initialized()) {
       return Error("Renderer not initialized");
    }
    if (!s_RendererState->has_begun_scene) {
@@ -144,28 +144,28 @@ steve::renderer::end_scene() {
 /* ------------------------------------------------------------------------------------------------------- */
 
 std::vector<Vertex>
-steve::renderer::get_vertices() {
+renderer::get_vertices() {
    return s_RendererState->vertices;
 }
 
 /* ------------------------------------------------------------------------------------------------------- */
 
 glm::vec4
-steve::renderer::get_clear_color() {
+renderer::get_clear_color() {
    return s_RendererState->clear_color;
 }
 
 /* ------------------------------------------------------------------------------------------------------- */
 
 void
-steve::renderer::set_clear_color(const glm::vec4 &color) {
+renderer::set_clear_color(const glm::vec4 &color) {
    s_RendererState->clear_color = color;
 }
 
 /* ------------------------------------------------------------------------------------------------------- */
 
 void
-steve::renderer::flush() {
+renderer::flush() {
    s_RendererState->has_begun_scene = false;
    s_RendererState->vertices.clear();
 }
@@ -173,7 +173,7 @@ steve::renderer::flush() {
 /* ------------------------------------------------------------------------------------------------------- */
 
 VoidResult
-steve::renderer::draw_vertices(const std::vector<Vertex> &vertices) {
+renderer::draw_vertices(const std::vector<Vertex> &vertices) {
    auto newSize = s_RendererState->vertices.size() + vertices.size();
    if (newSize > MAX_VERTICES) {
       return Error("Too many vertices");
@@ -187,7 +187,7 @@ steve::renderer::draw_vertices(const std::vector<Vertex> &vertices) {
 /* ------------------------------------------------------------------------------------------------------- */
 
 void
-steve::renderer::print_vertices() {
+renderer::print_vertices() {
    system("clear");
 
    const int shellColumns = 110;
