@@ -104,6 +104,8 @@ renderer::end_scene() {
       return Error("Renderer scene has not begun");
    }
    if (s_RendererState->vertices.empty()) {
+      flush();
+
       return Ok();
    }
 
