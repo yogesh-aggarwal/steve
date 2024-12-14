@@ -172,15 +172,16 @@ steve::renderer::flush() {
 
 /* ------------------------------------------------------------------------------------------------------- */
 
-void
+VoidResult
 steve::renderer::draw_vertices(const std::vector<Vertex> &vertices) {
    auto newSize = s_RendererState->vertices.size() + vertices.size();
    if (newSize > MAX_VERTICES) {
-      std::cerr << "Too many vertices" << std::endl;
-      return;
+      return Error("Too many vertices");
    }
 
    s_RendererState->vertices.insert(s_RendererState->vertices.end(), vertices.begin(), vertices.end());
+
+   return Ok();
 }
 
 /* ------------------------------------------------------------------------------------------------------- */

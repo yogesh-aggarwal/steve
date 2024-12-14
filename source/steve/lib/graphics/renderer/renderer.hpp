@@ -44,7 +44,7 @@ namespace steve::renderer {
    void
    flush();
 
-   void
+   VoidResult
    draw_vertices(const std::vector<Vertex> &vertices);
 
    void
