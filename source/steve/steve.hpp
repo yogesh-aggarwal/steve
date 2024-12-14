@@ -1,5 +1,7 @@
 #pragma once
 
+#include <steve/lib/application/lifecycle.hpp>
+#include <steve/lib/application/state.hpp>
 #include <steve/lib/application/window.hpp>
 
 #include <steve/lib/graphics/draw.hpp>
@@ -29,6 +31,25 @@
 inline void
 hello_steve() {
    std::cout << "Hello, from Steve!" << std::endl;
+}
+
+/* ------------------------------------------------------------------------------------------------------- */
+
+namespace steve {
+   inline void
+   run(application::Configuration initial_config) {
+      application::Window::initialize(initial_config)   //
+          .except("Failed to initialize application.")
+          .panic_if_error();
+
+      /* Run the mainloop */
+      application::Window::run()   //
+          .except("Failed to run application.")
+          .panic_if_error();
+
+      /* Terminate application */
+      application::Window::terminate();
+   }
 }
 
 /* ------------------------------------------------------------------------------------------------------- */
