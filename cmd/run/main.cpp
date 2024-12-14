@@ -1,6 +1,9 @@
 #include <steve/steve.hpp>
 
 using namespace steve;
+using namespace steve::application;
+
+/* ------------------------------------------------------------------------------------------------------- */
 
 Ref<steve::ui::Container>
 DrawUI() {
@@ -70,7 +73,9 @@ DrawUI() {
    return canvas;
 }
 
-class Application : public application::BasicLifecycle {
+/* ------------------------------------------------------------------------------------------------------- */
+
+class Application : public BasicLifecycle {
 public:
    void
    on_init() override {
@@ -95,6 +100,8 @@ public:
    }
 };
 
+/* ------------------------------------------------------------------------------------------------------- */
+
 int
 main() {
    run_as_app({
@@ -107,3 +114,5 @@ main() {
 
    return EXIT_SUCCESS;
 }
+
+/* ------------------------------------------------------------------------------------------------------- */
