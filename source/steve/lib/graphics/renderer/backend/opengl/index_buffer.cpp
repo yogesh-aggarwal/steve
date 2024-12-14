@@ -4,15 +4,19 @@
 
 /* ------------------------------------------------------------------------------------------------------- */
 
+using namespace steve;
+
+/* ------------------------------------------------------------------------------------------------------- */
+
 inline uint32_t
-steve::IndexBuffer::get_id() const {
+IndexBuffer::get_id() const {
    return m_ID;
 }
 
 /* ------------------------------------------------------------------------------------------------------- */
 
 VoidResult
-steve::IndexBuffer::bind_and_populate() {
+IndexBuffer::bind_and_populate() {
    if (!m_HasInitialized) {
       glGenBuffers(1, &m_ID);
       m_HasInitialized = true;
@@ -43,7 +47,7 @@ steve::IndexBuffer::bind_and_populate() {
 /* ------------------------------------------------------------------------------------------------------- */
 
 VoidResult
-steve::IndexBuffer::bind_and_upload_data(const std::vector<uint32_t> &data) {
+IndexBuffer::bind_and_upload_data(const std::vector<uint32_t> &data) {
    if (!m_HasInitialized) {
       glGenBuffers(1, &m_ID);
       m_HasInitialized = true;

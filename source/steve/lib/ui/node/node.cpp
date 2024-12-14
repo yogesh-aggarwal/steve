@@ -5,39 +5,54 @@
 
 #include <steve/lib/application/window.hpp>
 
-steve::ui::Node::Node()
-    : m_InternalID(), m_Properties({}), m_PaintBounds(), m_Parent(nullptr), m_Children({}) {}
+/* ------------------------------------------------------------------------------------------------------- */
 
-steve::ui::Node::Node(const Node &other)
+using namespace steve;
+
+/* ------------------------------------------------------------------------------------------------------- */
+
+ui::Node::Node() : m_InternalID(), m_Properties({}), m_PaintBounds(), m_Parent(nullptr), m_Children({}) {}
+
+/* ------------------------------------------------------------------------------------------------------- */
+
+ui::Node::Node(const Node &other)
     : m_InternalID(other.m_InternalID), m_Properties(other.m_Properties), m_Parent(other.m_Parent),
       m_Children(other.m_Children), m_PaintBounds(other.m_PaintBounds) {}
 
-steve::ui::Node
-steve::ui::Node::WithProperties(const Properties &properties) {
+/* ------------------------------------------------------------------------------------------------------- */
+
+ui::Node
+ui::Node::WithProperties(const Properties &properties) {
    Node node;
    node.m_Properties = properties;
 
    return node;
 }
 
-steve::ui::Node
-steve::ui::Node::WithParent(Ref<Node> parent) {
+/* ------------------------------------------------------------------------------------------------------- */
+
+ui::Node
+ui::Node::WithParent(Ref<Node> parent) {
    Node node;
    node.m_Parent = parent;
 
    return node;
 }
 
-steve::ui::Node
-steve::ui::Node::WithChildren(const std::vector<Ref<Node>> &children) {
+/* ------------------------------------------------------------------------------------------------------- */
+
+ui::Node
+ui::Node::WithChildren(const std::vector<Ref<Node>> &children) {
    Node node;
    node.m_Children = children;
 
    return node;
 }
 
+/* ------------------------------------------------------------------------------------------------------- */
+
 bool
-steve::ui::Node::IsChildOf(Ref<Node> node) const {
+ui::Node::IsChildOf(Ref<Node> node) const {
    if (m_Parent == nullptr) {
       return false;
    }
@@ -48,8 +63,10 @@ steve::ui::Node::IsChildOf(Ref<Node> node) const {
    return m_Parent->IsChildOf(node);
 }
 
+/* ------------------------------------------------------------------------------------------------------- */
+
 bool
-steve::ui::Node::ContainsChildByInternalID(const InternalID &id) const {
+ui::Node::ContainsChildByInternalID(const InternalID &id) const {
    for (const auto &child : m_Children) {
       if (child->GetInternalID() == id) {
          return true;
@@ -59,36 +76,48 @@ steve::ui::Node::ContainsChildByInternalID(const InternalID &id) const {
    return false;
 }
 
+/* ------------------------------------------------------------------------------------------------------- */
+
 void
-steve::ui::Node::PushChild(Ref<Node> node) {
+ui::Node::PushChild(Ref<Node> node) {
    m_Children.push_back(node);
 }
 
+/* ------------------------------------------------------------------------------------------------------- */
+
 void
-steve::ui::Node::PushChildren(const std::vector<Ref<Node>> &nodes) {
+ui::Node::PushChildren(const std::vector<Ref<Node>> &nodes) {
    m_Children.insert(m_Children.end(), nodes.begin(), nodes.end());
 }
 
+/* ------------------------------------------------------------------------------------------------------- */
+
 void
-steve::ui::Node::PushChild(const Node &node) {
+ui::Node::PushChild(const Node &node) {
    PushChild(CreateRef<Node>(node));
 }
 
+/* ------------------------------------------------------------------------------------------------------- */
+
 void
-steve::ui::Node::PushChildren(const std::vector<Node> &nodes) {
+ui::Node::PushChildren(const std::vector<Node> &nodes) {
    std::vector<Ref<Node>> children;
    for (const auto &node : nodes)
       children.push_back(CreateRef<Node>(node));
    PushChildren(children);
 }
 
+/* ------------------------------------------------------------------------------------------------------- */
+
 void
-steve::ui::Node::RemoveChildByIndex(uint32_t index) {
+ui::Node::RemoveChildByIndex(uint32_t index) {
    m_Children.erase(m_Children.begin() + index);
 }
 
+/* ------------------------------------------------------------------------------------------------------- */
+
 void
-steve::ui::Node::RemoveChildByInternalID(const InternalID &id) {
+ui::Node::RemoveChildByInternalID(const InternalID &id) {
    for (size_t i = 0; i < m_Children.size(); i++) {
       if (m_Children[i]->GetInternalID() == id) {
          m_Children.erase(m_Children.begin() + i);
@@ -97,8 +126,10 @@ steve::ui::Node::RemoveChildByInternalID(const InternalID &id) {
    }
 }
 
+/* ------------------------------------------------------------------------------------------------------- */
+
 void
-steve::ui::Node::CalculateBounds() {
+ui::Node::CalculateBounds() {
    if (!m_Parent) {
       m_PaintBounds.SetCalculatedMaxWidth(m_Properties.styles.GetWidth().GetValue());
       m_PaintBounds.SetCalculatedMinWidth(m_Properties.styles.GetWidth().GetValue());
@@ -108,8 +139,10 @@ steve::ui::Node::CalculateBounds() {
    CalculatePaintBounds();
 }
 
+/* ------------------------------------------------------------------------------------------------------- */
+
 void
-steve::ui::Node::CalculateMinBounds() {
+ui::Node::CalculateMinBounds() {
    // If the node has children, calculate the bounds of the children first.
    float minWidth = m_Properties.styles.GetWidth().GetMin();
    if (m_Children.size()) {
@@ -135,8 +168,10 @@ steve::ui::Node::CalculateMinBounds() {
    m_PaintBounds.SetCalculatedMinWidth(minWidth);
 }
 
+/* ------------------------------------------------------------------------------------------------------- */
+
 void
-steve::ui::Node::CalculatePaintBounds() {
+ui::Node::CalculatePaintBounds() {
    if (!m_Children.size())
       return;
 
@@ -176,3 +211,5 @@ steve::ui::Node::CalculatePaintBounds() {
       xOffset += width;
    }
 }
+
+/* ------------------------------------------------------------------------------------------------------- */

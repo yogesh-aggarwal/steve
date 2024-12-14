@@ -1,7 +1,13 @@
 #include "color.hpp"
 
-steve::ui::StylingSpec::Color
-steve::ui::StylingSpec::Color::FromHexString(const std::string &hexString) {
+/* ------------------------------------------------------------------------------------------------------- */
+
+using namespace steve;
+
+/* ------------------------------------------------------------------------------------------------------- */
+
+ui::StylingSpec::Color
+ui::StylingSpec::Color::FromHexString(const std::string &hexString) {
    std::string hex = hexString;
 
    if (hex.size() < 3)
@@ -24,8 +30,10 @@ steve::ui::StylingSpec::Color::FromHexString(const std::string &hexString) {
    return Color(glm::vec4(r, g, b, a));
 }
 
-steve::ui::StylingSpec::Color
-steve::ui::StylingSpec::Color::FromHex(uint32_t hex) {
+/* ------------------------------------------------------------------------------------------------------- */
+
+ui::StylingSpec::Color
+ui::StylingSpec::Color::FromHex(uint32_t hex) {
    float r = static_cast<float>((hex >> 24) & 0xFF) / 255.0f;
    float g = static_cast<float>((hex >> 16) & 0xFF) / 255.0f;
    float b = static_cast<float>((hex >> 8) & 0xFF) / 255.0f;
@@ -34,18 +42,24 @@ steve::ui::StylingSpec::Color::FromHex(uint32_t hex) {
    return Color(glm::vec4(r, g, b, a));
 }
 
-steve::ui::StylingSpec::Color
-steve::ui::StylingSpec::Color::FromRGB(uint8_t r, uint8_t g, uint8_t b) {
+/* ------------------------------------------------------------------------------------------------------- */
+
+ui::StylingSpec::Color
+ui::StylingSpec::Color::FromRGB(uint8_t r, uint8_t g, uint8_t b) {
    return FromRGBA(r, g, b, 255);
 }
 
-steve::ui::StylingSpec::Color
-steve::ui::StylingSpec::Color::FromRGBA(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
+/* ------------------------------------------------------------------------------------------------------- */
+
+ui::StylingSpec::Color
+ui::StylingSpec::Color::FromRGBA(uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
    return Color(glm::vec4(r / 255.0f, g / 255.0f, b / 255.0f, a / 255.0f));
 }
 
+/* ------------------------------------------------------------------------------------------------------- */
+
 std::string
-steve::ui::StylingSpec::Color::ToHexString() const {
+ui::StylingSpec::Color::ToHexString() const {
    char hexString[9];
    std::snprintf(hexString,
                  sizeof(hexString),
@@ -57,8 +71,12 @@ steve::ui::StylingSpec::Color::ToHexString() const {
    return std::string(hexString);
 }
 
+/* ------------------------------------------------------------------------------------------------------- */
+
 uint32_t
-steve::ui::StylingSpec::Color::ToHex() const {
+ui::StylingSpec::Color::ToHex() const {
    return static_cast<uint32_t>(m_Color.r * 255) << 24 | static_cast<uint32_t>(m_Color.g * 255) << 16 |
           static_cast<uint32_t>(m_Color.b * 255) << 8 | static_cast<uint32_t>(m_Color.a * 255);
 }
+
+/* ------------------------------------------------------------------------------------------------------- */
