@@ -1,31 +1,28 @@
 #include "window.hpp"
+#include "lifecycle.hpp"
 
-using namespace steve;
+using namespace steve::application;
 
 /* ------------------------------------------------------------------------------------------------------- */
 
-ApplicationWindow::State s_ApplicationWindowState;
+State s_ApplicationWindowState;
 
 /* ------------------------------------------------------------------------------------------------------- */
 
 VoidResult
-ApplicationWindow::initialize(Configuration config) {
+Window::initialize(Configuration config) {
    /* Initialize state */
    {
       s_ApplicationWindowState.Title  = config.Title;
       s_ApplicationWindowState.Width  = config.Width;
       s_ApplicationWindowState.Height = config.Height;
 
-      s_ApplicationWindowState.LifeCyclePtr = config.LifeCyclePtr;
+      s_ApplicationWindowState.Lifecycle = config.Lifecycle;
 
       s_ApplicationWindowState.IsVSync = config.IsVSync;
 
       s_ApplicationWindowState.IsRunning = false;
       s_ApplicationWindowState.Window    = nullptr;
-
-      if (!s_ApplicationWindowState.LifeCyclePtr) {
-         return Error("Application window lifecycle not provided");
-      }
    }
 
    /* Initialize GLFW and OpenGL */
@@ -65,14 +62,14 @@ ApplicationWindow::initialize(Configuration config) {
                                      s_ApplicationWindowState.Width  = width;
                                      s_ApplicationWindowState.Height = height;
 
-                                     s_ApplicationWindowState.LifeCyclePtr->on_render();
+                                     s_ApplicationWindowState.Lifecycle->on_render();
                                   });
    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
       terminate();
       return Error("Failed to initialize GLAD in application window");
    }
 
-   s_ApplicationWindowState.LifeCyclePtr->on_init();
+   s_ApplicationWindowState.Lifecycle->on_init();
 
    return Ok();
 }
@@ -80,7 +77,7 @@ ApplicationWindow::initialize(Configuration config) {
 /* ------------------------------------------------------------------------------------------------------- */
 
 VoidResult
-ApplicationWindow::run() {
+Window::run() {
    if (!s_ApplicationWindowState.Window) {
       return Error("Application window not initialized");
    }
@@ -101,7 +98,7 @@ ApplicationWindow::run() {
       if (glError)
          std::cout << glError << std::endl;
 
-      s_ApplicationWindowState.LifeCyclePtr->on_render();
+      s_ApplicationWindowState.Lifecycle->on_render();
 
       glfwSwapBuffers(s_ApplicationWindowState.Window);
       glfwPollEvents();
@@ -115,45 +112,45 @@ ApplicationWindow::run() {
 /* ------------------------------------------------------------------------------------------------------- */
 
 bool
-ApplicationWindow::is_running() {
+Window::is_running() {
    return s_ApplicationWindowState.IsRunning;
 }
 
 /* ------------------------------------------------------------------------------------------------------- */
 
 void
-ApplicationWindow::terminate() {
+Window::terminate() {
    if (!s_ApplicationWindowState.Window)
       return;
 
-   s_ApplicationWindowState.LifeCyclePtr->on_terminate();
+   s_ApplicationWindowState.Lifecycle->on_terminate();
 
    glfwDestroyWindow(s_ApplicationWindowState.Window);
    glfwTerminate();
 
-   s_ApplicationWindowState.Window       = nullptr;
-   s_ApplicationWindowState.IsRunning    = false;
-   s_ApplicationWindowState.LifeCyclePtr = nullptr;
+   s_ApplicationWindowState.Window    = nullptr;
+   s_ApplicationWindowState.IsRunning = false;
+   s_ApplicationWindowState.Lifecycle = nullptr;
 }
 
 /* ------------------------------------------------------------------------------------------------------- */
 
 int
-ApplicationWindow::get_width() {
+Window::get_width() {
    return s_ApplicationWindowState.Width;
 }
 
 /* ------------------------------------------------------------------------------------------------------- */
 
 int
-ApplicationWindow::get_height() {
+Window::get_height() {
    return s_ApplicationWindowState.Height;
 }
 
 /* ------------------------------------------------------------------------------------------------------- */
 
 void
-ApplicationWindow::set_vsync(bool enabled) {
+Window::set_vsync(bool enabled) {
    s_ApplicationWindowState.IsVSync = enabled;
    glfwSwapInterval(s_ApplicationWindowState.IsVSync);
 }
@@ -161,14 +158,14 @@ ApplicationWindow::set_vsync(bool enabled) {
 /* ------------------------------------------------------------------------------------------------------- */
 
 void
-ApplicationWindow::refresh_vsync_enable_state() {
+Window::refresh_vsync_enable_state() {
    glfwSwapInterval(s_ApplicationWindowState.IsVSync);
 }
 
 /* ------------------------------------------------------------------------------------------------------- */
 
 Pair<float, float>
-ApplicationWindow::get_display_dimensions() {
+Window::get_display_dimensions() {
    const GLFWvidmode *mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
    return { static_cast<float>(mode->width), static_cast<float>(mode->height) };
 }
@@ -176,12 +173,11 @@ ApplicationWindow::get_display_dimensions() {
 /* ------------------------------------------------------------------------------------------------------- */
 
 void
-ApplicationWindow::handle_inputs() {
+Window::handle_inputs() {
    if (!s_ApplicationWindowState.IsRunning)
       return;
 
-   s_ApplicationWindowState.LifeCyclePtr->on_key(
-       glfwGetKey(s_ApplicationWindowState.Window, GLFW_KEY_ESCAPE));
+   s_ApplicationWindowState.Lifecycle->on_key(glfwGetKey(s_ApplicationWindowState.Window, GLFW_KEY_ESCAPE));
 
    if (glfwGetKey(s_ApplicationWindowState.Window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
       terminate();

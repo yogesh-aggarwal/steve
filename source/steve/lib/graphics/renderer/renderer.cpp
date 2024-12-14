@@ -114,8 +114,8 @@ steve::renderer::end_scene() {
    glClear(GL_COLOR_BUFFER_BIT);
 
    glm::mat4 projectionMat = glm::ortho(0.0f,
-                                        (float)ApplicationWindow::get_width(),
-                                        (float)ApplicationWindow::get_height(),
+                                        (float)application::Window::get_width(),
+                                        (float)application::Window::get_height(),
                                         0.0f,
                                         -1.0f,
                                         1.0f);

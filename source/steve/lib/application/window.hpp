@@ -1,45 +1,10 @@
 #pragma once
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include "state.hpp"
+#include "lifecycle.hpp"
 
-#include <steve/core/pch>
-
-namespace steve {
-   class ApplicationWindow {
-   public:
-      class LifeCycle {
-      public:
-         LifeCycle() = default;
-
-         virtual void
-         on_init() {}
-
-         virtual void
-         on_render() {}
-
-         virtual void
-         on_terminate() {}
-
-         virtual void
-         on_key(int key) {}
-      };
-
-      struct Configuration {
-         std::string Title;
-         uint32_t    Width;
-         uint32_t    Height;
-
-         LifeCycle *LifeCyclePtr;
-
-         bool IsVSync;
-      };
-
-      struct State : Configuration {
-         GLFWwindow *Window;
-         bool        IsRunning;
-      };
-
+namespace steve::application {
+   class Window {
    public:
       static VoidResult
       initialize(Configuration config);
